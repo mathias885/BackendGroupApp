@@ -26,14 +26,10 @@ DELETE  http://localhost:3000/eventi/id
 GET  http://localhost:3000/
 
 ###
-GET http://localhost:3000/test/578154
 
-###
-post http://localhost:3000/test
+POST http://localhost:3000/partecipazione
 Content-Type: application/json
 
-{
-    "name": "evento",
-    "price": 333,
-    "date" : "2024-11-17T00:00:00.000Z"
+{"user": 453654,
+  "event": 456356543
 }

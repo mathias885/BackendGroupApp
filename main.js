@@ -21,15 +21,17 @@ mongoose.connect(uri)
   console.error("Errore di connessione a MongoDB:", error.message);
 });
 
-// Route di test per verificare i parametri di richiesta
-app.all('/test', (req, res) => {
-    console.log("Richiesta ricevuta:", req.body);
-    res.send(req.body);
-});
+
+
 
 // Importa la route per gli eventi
 const eventRoute = require('./routes/event.route');
 app.use('/eventi', eventRoute);
+
+// Importa la route per le partecipazioni
+const partecipationRoute = require('./routes/partecipation.route');
+app.use('/partecipazione', partecipationRoute);
+
 
 // Middleware per gestire errori 404
 app.use((req, res, next) => {
