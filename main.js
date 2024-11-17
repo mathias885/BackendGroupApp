@@ -1,15 +1,24 @@
 const http = require('http');
 const express = require('express');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 const app = express();
 app.use(express.json());
 
 // Connessione al database MongoDB
-mongoose.connect('mongodb://localhost:27017/eventapi').then(() => {
-    console.log("MongoDB connesso per eventi");
-}).catch(error => {
-    console.error("Errore di connessione a MongoDB:", error);
+const password=process.env.PASSWORD;
+console.log(password);
+
+const uri = `mongodb+srv://mathiasbruni04:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
+console.log(uri);
+
+mongoose.connect(uri)
+.then(() => {
+  console.log("MongoDB connesso per eventi");
+})
+.catch(error => {
+  console.error("Errore di connessione a MongoDB:", error.message);
 });
 
 // Route di test per verificare i parametri di richiesta

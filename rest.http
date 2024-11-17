@@ -1,14 +1,14 @@
-GET http://localhost:3000/eventi
+GET http://localhost:3000/eventi?price=700&date="2024-11-19"
 
 ###
 
 POST http://localhost:3000/eventi
 Content-Type: application/json
 
-{"title": "Evento 5",
-  "date": "2024-12-01T15:00:00Z",
+{"title": "Evento 6",
+  "date": "2024-11-17T00:00:00.000Z",
   "location": "Milano",
-  "price": 666
+  "price": 30
   }
 ###
 
@@ -34,5 +34,6 @@ Content-Type: application/json
 
 {
     "name": "evento",
-    "price": 333
+    "price": 333,
+    "date" : "2024-11-17T00:00:00.000Z"
 }

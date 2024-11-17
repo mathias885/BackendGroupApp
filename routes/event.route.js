@@ -5,12 +5,22 @@ const Event = require('../modules/event.module');
 // Ottieni tutti gli eventi con prezzo superiore a 50
 router.get('/', async (req, res) => {
     try {
-        const results = await Event.find();
+        //parametri del filtro
+        price=req.query.price;
+        date=req.query.date;
+
+        const results = await Event.find({
+            price: { $lt: price },  // Filtro per eventi che costano meno di 50
+            date: { $lt: date }  // Filtro per eventi prima di una certa data
+        });
+        
         res.send(results);
+
     } catch (error) {
         console.log("Errore durante il recupero degli eventi:", error.message);
         res.status(500).send("Errore durante il recupero degli eventi");
     }
+    console.log("ricerca filtrata");
 });
 
 // Crea un nuovo evento
