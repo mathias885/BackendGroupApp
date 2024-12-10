@@ -10,7 +10,7 @@ app.use(express.json());
 const password=process.env.PASSWORD;
 console.log(password);
 
-const uri = `mongodb+srv://mathiasbruni04:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
+const uri = `mongodb+srv://riccardoromeo03:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
 console.log(uri);
 
 mongoose.connect(uri)
@@ -31,6 +31,12 @@ app.use('/eventi', eventRoute);
 // Importa la route per le partecipazioni
 const partecipationRoute = require('./routes/partecipation.route');
 app.use('/partecipazione', partecipationRoute);
+
+const registrationRoute = require('./routes/registration.route');
+app.use('/registration', registrationRoute);
+
+const accessRoute = require('./routes/access.route');
+app.use('/access', accessRoute);
 
 
 // Middleware per gestire errori 404
@@ -56,6 +62,15 @@ app.get('/', (req, res) => {
     console.log("Metodo HTTP:", req.method);
     res.send("Benvenuto nell'API per gli eventi");
 });
+
+app.post('/access', (req,res) =>{
+    res.send("Utente loggato");
+});
+
+app.post('/registration', async (req, res) => {
+    res.send("Utente creato");
+});
+
 
 app.post('/eventi', (req, res) => {
     // Endpoint per la creazione di un nuovo evento
