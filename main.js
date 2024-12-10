@@ -32,6 +32,12 @@ app.use('/eventi', eventRoute);
 const partecipationRoute = require('./routes/partecipation.route');
 app.use('/partecipazione', partecipationRoute);
 
+const registrationRoute = require('./routes/registration.route');
+app.use('/registration', registrationRoute);
+
+const accessRoute = require('./routes/access.route');
+app.use('/access', accessRoute);
+
 
 // Middleware per gestire errori 404
 app.use((req, res, next) => {
@@ -57,9 +63,14 @@ app.get('/', (req, res) => {
     res.send("Benvenuto nell'API per gli eventi");
 });
 
-/*app.post('/login', (req,res) =>{
+app.post('/access', (req,res) =>{
+    res.send("Utente loggato");
+});
+
+app.post('/registration', async (req, res) => {
     res.send("Utente creato");
-});*/
+});
+
 
 app.post('/eventi', (req, res) => {
     // Endpoint per la creazione di un nuovo evento

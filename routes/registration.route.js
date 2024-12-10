@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../modules/user.module'); 
 
 // Route to handle user registration
-router.post('/register', async (req, res) => {
+router.post('/', async (req, res) => {
     const { mail, password, name, dateOfBirth, surname, telephone } = req.body;
 
     // Validate required fields
@@ -15,7 +15,12 @@ router.post('/register', async (req, res) => {
         // Controlla se l'e-mail usata è già presente nel database
         const existingUser = await User.findOne({ mail });
         if (existingUser) {
-            return res.status(409).json({ error: 'Esiste già un utente registrato con questa e-mail' });
+            return res.status(409).json({
+                 error: {
+                    status: 409,
+                    message: 'Esiste già un utente registrato con questa e-mail'
+                    }
+                });
         }
 
 

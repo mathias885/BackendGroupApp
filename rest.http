@@ -9,7 +9,7 @@ Content-Type: application/json
   "date": "2024-11-17T00:00:00.000Z",
   "location": "Milano",
   "price": 30
-  }
+}
 ###
 
 GET http://localhost:3000/eventi/id
@@ -33,6 +33,26 @@ Content-Type: application/json
 {"user": 453654,
   "event": 45643
 }
+###
+POST http://localhost:3000/registration
+Content-Type: application/json
 
+{
+  "mail":"giovanni@pascoli",
+  "password":"lepalle",
+  "name":"giovanni",
+  "dateOfBirth":"2024-11-17T00:00:00.000Z",
+  "surname":"pascoli",
+  "telephone":333
+}
+
+###
+POST http://localhost:3000/access
+Content-Type: application/json
+
+{
+  "mail":"giovanni@pascoli",
+  "password":"lepalle"
+}
 
 

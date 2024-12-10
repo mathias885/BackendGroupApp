@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = 'secret_key'; // key finta, da cambiare in produzione
 
 // Login Route
-router.post('/login', async (req, res) => {
+router.post('/', async (req, res) => {
     const { mail, password } = req.body;
 
     try {
@@ -32,7 +32,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Logout Route (opzionale)
-router.post('/logout', (req, res) => {
+router.post('/', (req, res) => {
     res.json({ message: 'Logged out successfully' });
 });
 

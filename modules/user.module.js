@@ -34,5 +34,5 @@ userSchema.methods.comparePassword = function(plainPassword) {
     return this.password === plainPassword;
 };
 
-const User = mongoose.model('events', userSchema);
+const User = mongoose.model('User', userSchema);
 module.exports = User;
