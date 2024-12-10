@@ -10,7 +10,7 @@ app.use(express.json());
 const password=process.env.PASSWORD;
 console.log(password);
 
-const uri = `mongodb+srv://mathiasbruni04:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
+const uri = `mongodb+srv://riccardoromeo03:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
 console.log(uri);
 
 mongoose.connect(uri)
@@ -56,6 +56,10 @@ app.get('/', (req, res) => {
     console.log("Metodo HTTP:", req.method);
     res.send("Benvenuto nell'API per gli eventi");
 });
+
+/*app.post('/login', (req,res) =>{
+    res.send("Utente creato");
+});*/
 
 app.post('/eventi', (req, res) => {
     // Endpoint per la creazione di un nuovo evento

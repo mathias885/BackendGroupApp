@@ -31,5 +31,8 @@ POST http://localhost:3000/partecipazione
 Content-Type: application/json
 
 {"user": 453654,
-  "event": 456356543
+  "event": 45643
 }
+
+
+

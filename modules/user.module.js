@@ -1,7 +1,16 @@
+const { type } = require('express/lib/response');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const eventSchema = new Schema({
+const userSchema = new Schema({
+    mail:{
+        type: String,
+        required:true
+    },
+    password:{
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
@@ -20,5 +29,10 @@ const eventSchema = new Schema({
     }
 });
 
-const User = mongoose.model('events', eventSchema);
+userSchema.methods.comparePassword = function(plainPassword) {
+    // Compara le password come stringhe (no hashing)
+    return this.password === plainPassword;
+};
+
+const User = mongoose.model('events', userSchema);
 module.exports = User;
