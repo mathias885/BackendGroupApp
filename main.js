@@ -10,7 +10,7 @@ app.use(express.json());
 const password=process.env.PASSWORD;
 console.log(password);
 
-const uri = `mongodb+srv://riccardoromeo03:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
+const uri = `mongodb+srv://mathiasbruni04:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
 console.log(uri);
 
 mongoose.connect(uri)
@@ -28,9 +28,13 @@ mongoose.connect(uri)
 const eventRoute = require('./routes/event.route');
 app.use('/eventi', eventRoute);
 
+// Importa la route per il controllo
+const controlRoute = require('./routes/control.route');
+app.use('/control', controlRoute);
+
 // Importa la route per le partecipazioni
 const partecipationRoute = require('./routes/partecipation.route');
-app.use('/partecipazione', partecipationRoute);
+app.use('/partecipation', partecipationRoute);
 
 const registrationRoute = require('./routes/registration.route');
 app.use('/registration', registrationRoute);

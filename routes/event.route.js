@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Event = require('../modules/event.module');
+const Draft = require('../modules/event_draft.module');
 
 // Ottieni tutti gli eventi con prezzo superiore a 50
 router.get('/', async (req, res) => {
@@ -28,7 +29,7 @@ router.post('/', (req, res) => {
     console.log("Dati ricevuti per l'evento:", req.body);
 
     // Istanzia un nuovo evento con i dati ricevuti
-    const eventInstance = new Event({
+    const eventInstance = new Draft({
         title: req.body.title,
         date: req.body.date,
         location: req.body.location,
@@ -47,19 +48,68 @@ router.post('/', (req, res) => {
         });
 });
 
+router.get('/partecipants', async (req, res) => {
+    try {
+        //parametri del filtro
+        event_id=req.query.id;
+
+        const event = await Event.findById(event_id);
+
+        if (!event) {
+            return res.status(404).json({ message: 'Evento non trovato' });
+        }
+
+        // Conta i partecipanti per l'evento
+        const participantsCount = await participation.countDocuments({ event_id });
+        
+        res.send(results);
+
+    } catch (error) {
+        console.log("Errore durante il recupero degli eventi:", error.message);
+        res.status(500).send("Errore durante il recupero degli eventi");
+    }
+    console.log("numero partecipanti");
+});
+
 // Ottieni evento per ID
-router.get('/:id', (req, res) => {
-    res.send("Recupero evento per ID");
+router.get('/:id',async (req, res) => {
+    try {
+        const event = await Event.findById(req.params.id);
+        if (!event) {
+            return res.status(404).json({ message: 'Evento non trovato' });
+        }
+        res.json(event);
+    } catch (err) {
+        res.status(500).send("Errore durante il recupero degli eventi");
+    }
 });
 
-// Aggiorna evento per ID
-router.patch('/:id', (req, res) => {
-    res.send("Aggiornamento evento per ID");
+// Aggiorna evento per ID ?????
+router.patch('/:id',async (req, res) => {
+    try {
+        const updatedEvent = await Event.findByIdAndUpdate(
+            req.params.id,
+        );
+        if (!updatedEvent) {
+            return res.status(404).json({ message: 'Evento non trovato' });
+        }
+        res.json(updatedEvent);
+    } catch (err) {
+        res.status(500).json({ message: 'Errore del server', error: err.message });
+    }
 });
 
-// Elimina evento per ID
-router.delete('/:id', (req, res) => {
-    res.send("Eliminazione evento per ID");
+// Elimina evento per ID AGGIUNGERE CONTROLLO CHE L EVENTO SIA TUO
+router.delete('/:id',async (req, res) => {
+    try {
+        const deletedEvent = await Event.findByIdAndDelete(req.params.id);
+        if (!deletedEvent) {
+            return res.status(404).json({ message: 'Evento non trovato' });
+        }
+        res.json({ message: 'Evento eliminato con successo', deletedEvent });
+    } catch (err) {
+        res.status(500).json({ message: 'Errore del server', error: err.message });
+    }
 });
 
 module.exports = router;

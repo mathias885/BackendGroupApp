@@ -4,11 +4,11 @@ const Schema = mongoose.Schema;
 const partecipationSchema = new Schema({
     
     userID: {
-        type: Number,
+        type: Schema.Types.ObjectId, 
         required: true
     },
     eventID: {
-        type: Number,
+        type: Schema.Types.ObjectId, 
         required: true
     }
 });

@@ -5,10 +5,10 @@ GET http://localhost:3000/eventi?price=700&date="2024-11-19"
 POST http://localhost:3000/eventi
 Content-Type: application/json
 
-{"title": "Evento 6",
-  "date": "2024-11-17T00:00:00.000Z",
-  "location": "Milano",
-  "price": 30
+{"title": "Evento 5",
+  "date": "2025-05-25T00:00:00.000Z",
+  "location": "siracusa",
+  "price": 1
 }
 ###
 
@@ -27,23 +27,27 @@ GET  http://localhost:3000/
 
 ###
 
-POST http://localhost:3000/partecipazione
+POST http://localhost:3000/partecipation
 Content-Type: application/json
 
-{"user": 453654,
-  "event": 45643
+{"user": "676d6a9da7ca56cf8a048481",
+  "event": "676d316e243039a057ef6e37"
 }
+
+###
+DELETE http://localhost:3000/partecipation/event?eventID=676d316e243039a057ef6e37
+
 ###
 POST http://localhost:3000/registration
 Content-Type: application/json
 
 {
-  "mail":"giovanni@pascoli",
-  "password":"lepalle",
-  "name":"giovanni",
-  "dateOfBirth":"2024-11-17T00:00:00.000Z",
-  "surname":"pascoli",
-  "telephone":333
+  "mail":"giuliano@gmail.com",
+  "password":"4654988",
+  "name":"giulianio",
+  "dateOfBirth":"2000-12-30T00:00:00.000Z",
+  "surname":"zambelli",
+  "telephone":337
 }
 
 ###
@@ -53,6 +57,15 @@ Content-Type: application/json
 {
   "mail":"giovanni@pascoli",
   "password":"lepalle"
+}
+
+###
+POST http://localhost:3000/control/id
+Content-Type: application/json
+
+{
+  "_id":"676d6b2da7ca56cf8a04848c"
+ 
 }
 
 
