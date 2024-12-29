@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
 
+//approva un dato evento con id
 router.post('/:id',async (req, res) => {
     try {
         console.log(req.body._id);
@@ -36,6 +37,8 @@ router.post('/:id',async (req, res) => {
     }
 });
 
+
+//elimina un dato evento con id
 router.delete('/:id',async (req, res) => {
     try {
         const deletedEvent = await Event.findByIdAndDelete(req.params.id);
