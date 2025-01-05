@@ -1,6 +1,7 @@
 const http = require('http');
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
@@ -10,7 +11,7 @@ app.use(express.json());
 const password=process.env.PASSWORD;
 console.log(password);
 
-const uri = `mongodb+srv://mathiasbruni04:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
+const uri = `mongodb+srv://leonerder:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
 console.log(uri);
 
 mongoose.connect(uri)
@@ -23,6 +24,7 @@ mongoose.connect(uri)
 
 
 
+app.use(cors());
 
 // Importa la route per gli eventi
 const eventRoute = require('./routes/event.route');
