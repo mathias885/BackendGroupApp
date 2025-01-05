@@ -2,11 +2,8 @@ const express = require('express');
 const router = express.Router();
 const partecipation = require('../modules/partecipation.module');
 
-// Ottieni tutti gli eventi con prezzo superiore a 50
-router.get('/', async (req, res) => {
-    
-    console.log("ricerca partecipazione non filtrata");
-});
+
+//assicurarsi che l id utente sia il proprio
 
 // Crea una nuova partecipazione
 router.post('/', (req, res) => {
@@ -33,12 +30,13 @@ router.post('/', (req, res) => {
 
 
 
+// Elimina tutte le partecipazioni con l'ID dell'evento
 
 router.delete('/event', async (req, res) => {
     try {
         eventID = req.query.eventID;
         console.log(eventID);
-        // Elimina tutte le partecipazioni con l'ID dell'evento
+        
         const result = await partecipation.deleteMany({ eventID });
 
         if (result.deletedCount === 0) {
@@ -57,8 +55,8 @@ router.delete('/event', async (req, res) => {
 // Elimina una partecipazione specifica dato userID ed eventID
 router.delete('/:single', async (req, res) => {
     try {
-        userID: req.body.user;
-        eventID: req.body.event;
+        userID = req.body.user;
+        eventID = req.body.event;
 
         // Elimina la partecipazione specifica
         const result = await partecipation.deleteOne({ userID, eventID });

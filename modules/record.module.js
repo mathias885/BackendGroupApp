@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const draftSchema = new Schema({
+const recordSchema = new Schema({
     title: {
         type: String,
         required: true
@@ -30,11 +30,15 @@ const draftSchema = new Schema({
         type: Number,
         required: true
     },
+    subs: {
+        type: Number,
+        required:true
+    },
     orgnizer:{
         type: Schema.Types.ObjectId, 
         required: true
     }
 });
 
-const Draft = mongoose.model('drafts', draftSchema);
-module.exports = Draft;
+const Record = mongoose.model('records', recordSchema);
+module.exports = Record;

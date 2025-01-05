@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const partecipationSchema = new Schema({
+const organizationSchema = new Schema({
     
     userID: {
         type: Schema.Types.ObjectId, 
@@ -13,5 +13,5 @@ const partecipationSchema = new Schema({
     }
 });
 
-const Partecipation = mongoose.model('Partecipation', partecipationSchema);
-module.exports = Partecipation;
+const Organization = mongoose.model('Organizations', organizationSchema);
+module.exports = Organization;

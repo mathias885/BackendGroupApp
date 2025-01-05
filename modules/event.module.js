@@ -17,6 +17,18 @@ const eventSchema = new Schema({
     price: {
         type: Number,
         required: true
+    },
+    category: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    max_subs: {
+        type: Number,
+        required: true
     }
 });
 
