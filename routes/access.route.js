@@ -1,28 +1,28 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../modules/user.module'); 
+const User = require('../modules/user.module');
 const jwt = require('jsonwebtoken');
 
-const JWT_SECRET = 'secret_key'; // key finta, da cambiare in produzione
+const JWT_SECRET = process.env.JWT_SECRET || 'default_secret_key'; // Secure in production
 
 // Login Route
 router.post('/', async (req, res) => {
     const { mail, password } = req.body;
 
     try {
-        // Trova utente tramite e-mail
+        // Find user by email
         const user = await User.findOne({ mail });
         if (!user) {
-            return res.status(401).json({ error: 'E-mail o password non valide' });
+            return res.status(401).json({ error: 'E-mail non valida' });
         }
 
-        // Verifica password 
+        // Verify password
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return res.status(401).json({ error: 'E-mail o password non valide' });
+            return res.status(401).json({ error: 'Password non valida' });
         }
 
-        // Genera JWT
+        // Generate JWT
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
         res.json({ token });
     } catch (err) {
@@ -31,8 +31,8 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Logout Route (opzionale)
-router.post('/', (req, res) => {
+// Logout Route
+router.post('/logout', (req, res) => {
     res.json({ message: 'Logged out successfully' });
 });
 

@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../modules/user.module'); 
+const bcrypt = require('bcrypt'); 
+
+const SALT_ROUNDS = 10;
 
 // Route to handle user registration
 router.post('/', async (req, res) => {
@@ -23,11 +26,14 @@ router.post('/', async (req, res) => {
                 });
         }
 
+        // Hash the password before saving it
+        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+
 
         // Crea un nuovo User
         const newUser = new User({
             mail,
-            password,
+            password: hashedPassword,
             name,
             dateOfBirth,
             surname,
