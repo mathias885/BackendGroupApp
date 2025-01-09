@@ -2,7 +2,7 @@ const http = require('http');
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
-const authenticateJWT = require('./middleware/authenticateJWT');
+const authenticateJWT = require('./middlewares/authenticateJWT');
 
 const app = express();
 app.use(express.json());
