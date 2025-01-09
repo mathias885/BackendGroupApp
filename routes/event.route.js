@@ -69,7 +69,7 @@ router.patch('/:id', authenticateJWT, async (req, res) => {
             return res.status(403).json({ message: 'Non hai i permessi per modificare questo evento' });
         }
 
-        // Procedi con l'aggiornamento dell'evento (ad esempio, aggiornando il titolo)
+        // Procedi con l'aggiornamento dell'evento 
         event.title = req.body.title || event.title;
         event.date = req.body.date || event.date;
         event.location = req.body.location || event.location;

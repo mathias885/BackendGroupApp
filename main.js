@@ -33,8 +33,8 @@ const accessRoute = require('./routes/access.route');
 
 // Usa le route
 app.use('/eventi', authenticateJWT, eventRoute);  // Protegge la route per gli eventi
-app.use('/partecipazione', authenticateJWT, partecipationRoute);  // Protegge anche la partecipazione
-app.use('/registration', registrationRoute);  // Non protetta (se vuoi proteggerla, aggiungi authenticateJWT)
+app.use('/partecipazione', authenticateJWT, partecipationRoute);  // Protegge la partecipazione
+app.use('/registration', registrationRoute);  // Non protetta
 app.use('/access', accessRoute);  // Non protetta
 
 
