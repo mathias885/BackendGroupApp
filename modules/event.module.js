@@ -17,7 +17,11 @@ const eventSchema = new Schema({
     price: {
         type: Number,
         required: true
-    }
+    },
+    creator: { type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', 
+        required: true 
+    } // Campo per l'utente creatore
 });
 
 const Event = mongoose.model('events', eventSchema);

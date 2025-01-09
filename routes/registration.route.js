@@ -7,10 +7,10 @@ const SALT_ROUNDS = 10;
 
 // Route to handle user registration
 router.post('/', async (req, res) => {
-    const { mail, password, name, dateOfBirth, surname, telephone } = req.body;
+    const { mail,userId, password, name, dateOfBirth, surname, telephone } = req.body;
 
     // Validate required fields
-    if (!mail || !password || !name || !dateOfBirth || !surname || !telephone) {
+    if (!mail || !userId || !password || !name || !dateOfBirth || !surname || !telephone) {
         return res.status(400).json({ error: 'Tutti i campi devono essere compilati' });
     }
 

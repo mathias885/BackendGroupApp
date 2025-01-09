@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Event = require('../modules/event.module');
+const authenticateJWT = require('../middlewares/authenticateJWT');
 
 // Ottieni tutti gli eventi con prezzo superiore a 50
 router.get('/', async (req, res) => {
@@ -32,7 +33,8 @@ router.post('/', (req, res) => {
         title: req.body.title,
         date: req.body.date,
         location: req.body.location,
-        price: req.body.price
+        price: req.body.price,
+        creator: req.user.userId
     });
 
     // Salva l'evento nel database
@@ -53,13 +55,59 @@ router.get('/:id', (req, res) => {
 });
 
 // Aggiorna evento per ID
-router.patch('/:id', (req, res) => {
-    res.send("Aggiornamento evento per ID");
+router.patch('/:id', authenticateJWT, async (req, res) => {
+    try {
+        // Ottieni l'evento tramite ID
+        const event = await Event.findById(req.params.id);
+
+        if (!event) {
+            return res.status(404).json({ message: 'Evento non trovato' });
+        }
+
+        // Verifica che l'utente sia il creatore dell'evento
+        if (event.creator.toString() !== req.user.userId) {
+            return res.status(403).json({ message: 'Non hai i permessi per modificare questo evento' });
+        }
+
+        // Procedi con l'aggiornamento dell'evento (ad esempio, aggiornando il titolo)
+        event.title = req.body.title || event.title;
+        event.date = req.body.date || event.date;
+        event.location = req.body.location || event.location;
+        event.price = req.body.price || event.price;
+
+        // Salva le modifiche
+        await event.save();
+
+        res.json({ message: 'Evento aggiornato con successo' });
+    } catch (err) {
+        console.error('Errore durante l\'aggiornamento dell\'evento:', err);
+        res.status(500).json({ message: 'Errore durante l\'aggiornamento dell\'evento' });
+    }
 });
 
 // Elimina evento per ID
-router.delete('/:id', (req, res) => {
-    res.send("Eliminazione evento per ID");
+router.delete('/:id', authenticateJWT, async (req, res) => {
+    try {
+        // Ottieni l'evento tramite ID
+        const event = await Event.findById(req.params.id);
+
+        if (!event) {
+            return res.status(404).json({ message: 'Evento non trovato' });
+        }
+
+        // Verifica che l'utente sia il creatore dell'evento
+        if (event.creator.toString() !== req.user.userId) {
+            return res.status(403).json({ message: 'Non hai i permessi per eliminare questo evento' });
+        }
+
+        // Elimina l'evento
+        await event.remove();
+
+        res.json({ message: 'Evento eliminato con successo' });
+    } catch (err) {
+        console.error('Errore durante l\'eliminazione dell\'evento:', err);
+        res.status(500).json({ message: 'Errore durante l\'eliminazione dell\'evento' });
+    }
 });
 
 module.exports = router;
