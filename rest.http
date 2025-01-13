@@ -129,7 +129,7 @@ POST http://localhost:3000/token_access
 Content-Type: application/json
 
 {
-    "token": "your_jwt_token_here"
+    "token": ""
 }
 
 

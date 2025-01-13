@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const User = require('../modules/user.module');
 const jwt = require('jsonwebtoken');
+const authenticateJWT = require('../middlewares/authenticateJWT');
+
 
 const JWT_SECRET = process.env.JWT_SECRET || 'default_secret_key'; // Secure in production
 
