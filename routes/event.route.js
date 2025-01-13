@@ -2,9 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Event = require('../modules/event.module');
 const authenticateJWT = require('../middlewares/authenticateJWT');
-
-const authenticateJWT = require('../middlewares/authenticateJWT');
-
 const Draft = require('../modules/event_draft.module');
 const Partecipation = require('../modules/partecipation.module');
 

@@ -4,10 +4,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 const authenticateJWT = require('./middlewares/authenticateJWT');
-const cors = require('cors');
-
-const authenticateJWT = require('./middlewares/authenticateJWT');
-
 const Event = require('./modules/event.module');
 const Record = require('./modules/record.module');
 const Partecipation = require('./modules/partecipation.module');
@@ -46,7 +42,7 @@ const registrationRoute = require('./routes/registration.route');
 const accessRoute = require('./routes/access.route');
 
 // Usa le route
-app.use('/eventi', authenticateJWT, eventRoute);  // Protegge la route per gli eventi
+app.use('/eventi', eventRoute);  // Protegge la route per gli eventi
 app.use('/partecipazione', authenticateJWT, partecipationRoute);  // Protegge la partecipazione
 app.use('/registration', registrationRoute);  // Non protetta
 app.use('/access', accessRoute);  // Non protetta
@@ -132,33 +128,32 @@ async function organizer(id){
 }
 
 // Endpoint principali
-/* app.get('/', (req, res) => {
-    console.log("URL richiesto:", req.url);
-    console.log("Metodo HTTP:", req.method);
-    res.send("Benvenuto nell'API per gli eventi");
-});
+//  app.get('/', (req, res) => {
+//     console.log("URL richiesto:", req.url);
+//     console.log("Metodo HTTP:", req.method);
+//     res.send("Benvenuto nell'API per gli eventi");
+// });
 
-app.post('/access', (req,res) =>{
-    res.send("Utente loggato");
-});
+// app.post('/access', (req,res) =>{
+//     res.send("Utente loggato");
+// });
 
-app.post('/registration', async (req, res) => {
-    res.send("Utente creato");
-});
+// app.post('/registration', async (req, res) => {
+//     res.send("Utente creato");
+// });
 
 
-app.post('/eventi', (req, res) => {
-    // Endpoint per la creazione di un nuovo evento
-    res.send("Evento creato");
-});
+// app.post('/eventi', (req, res) => {
+//     // Endpoint per la creazione di un nuovo evento
+//     res.send("Evento creato");
+// });
 
-app.delete('/eventi', (req, res) => {
-    // Endpoint per la cancellazione di un evento
-    res.send("Evento eliminato");
-});
+// app.delete('/eventi', (req, res) => {
+//     // Endpoint per la cancellazione di un evento
+//     res.send("Evento eliminato");
+// });
 
 // Avvio del server
 app.listen(3000, () => {
     console.log("Server avviato su porta 3000");
 });
- */
