@@ -10,7 +10,7 @@ function authenticateJWT(req, res, next) {
 
     // Verifica se l'intestazione di autorizzazione è presente
     if (!authHeader) {
-        return res.status(401).json({ message: 'Autorizzazione mancante' });
+        return res.status(401).json({ message: 'Autorizzazione mancante -+-' });
     }
 
     // Estrae il token dal formato "Bearer <token>"

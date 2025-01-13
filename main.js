@@ -47,9 +47,11 @@ app.use('/partecipation', partecipationRoute);
 
 const registrationRoute = require('./routes/registration.route');
 app.use('/registration',registrationRoute);
+
 const accessRoute = require('./routes/access.route');
 const { title } = require('process');
 app.use('/access', accessRoute);
+
 
 
 // Middleware per gestire errori 404
@@ -130,10 +132,14 @@ async function organizer(id){
 }
 
 // Endpoint principali
-/* app.get('/', (req, res) => {
+ app.get('/', (req, res) => {
     console.log("URL richiesto:", req.url);
     console.log("Metodo HTTP:", req.method);
     res.send("Benvenuto nell'API per gli eventi");
+});
+
+app.post('/token_access', async (req, res) => {
+    res.send("Utente loggato tramite token");
 });
 
 app.post('/access', (req,res) =>{
@@ -159,4 +165,4 @@ app.delete('/eventi', (req, res) => {
 app.listen(3000, () => {
     console.log("Server avviato su porta 3000");
 });
- */
+ 

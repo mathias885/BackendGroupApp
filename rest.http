@@ -125,11 +125,12 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3000/token_access
+POST http://localhost:3000/access/token_access
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1NGIwOTQwYzQ2ZDhjYWU1YWM3ZDUiLCJpYXQiOjE3MzY3ODk3MzUsImV4cCI6MTczNjc5MzMzNX0.eKriHLfR5Hx6c8TD1RMN-qTu7Z29ThWlPeVq8_dTKLk
 Content-Type: application/json
 
 {
-    "token": ""
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1NGIwOTQwYzQ2ZDhjYWU1YWM3ZDUiLCJpYXQiOjE3MzY3ODk3MzUsImV4cCI6MTczNjc5MzMzNX0.eKriHLfR5Hx6c8TD1RMN-qTu7Z29ThWlPeVq8_dTKLk"
 }
 
 
