@@ -31,6 +31,10 @@ const userSchema = new Schema({
     telephone: {
         type: Number,
         required: true
+    },
+    isAdmin: {
+        type: Boolean,
+        required: true
     }
 });
 

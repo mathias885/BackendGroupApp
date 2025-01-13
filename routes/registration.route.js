@@ -7,6 +7,7 @@ const SALT_ROUNDS = 10;
 
 // Route to handle user registration
 router.post('/', async (req, res) => {
+    
     const { mail, userId, password, name, dateOfBirth, surname, telephone } = req.body;
 
     console.log('Dati ricevuti:', req.body);  // Verifica cosa ricevi
@@ -53,6 +54,7 @@ router.post('/', async (req, res) => {
             dateOfBirth,
             surname,
             telephone,
+            isAdmin: false
         });
 
         // Salva il nuovo user nel database
