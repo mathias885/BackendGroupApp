@@ -1,19 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const Event = require('../modules/event.module');
+
 const authenticateJWT = require('../middlewares/authenticateJWT');
 
+const Draft = require('../modules/event_draft.module');
+const Partecipation = require('../modules/partecipation.module');
+
+
 // Ottieni tutti gli eventi con prezzo superiore a 50
-router.get('/', async (req, res) => {
+router.get('/filtered', async (req, res) => {
     try {
         //parametri del filtro
+        const start = parseInt(req.query.start, 10) || 0; // Default: 0 se non specificato
         price=req.query.price;
         date=req.query.date;
 
         const results = await Event.find({
             price: { $lt: price },  // Filtro per eventi che costano meno di 50
             date: { $lt: date }  // Filtro per eventi prima di una certa data
-        });
+        }).skip(start).limit(100);
         
         res.send(results);
 
@@ -23,6 +29,32 @@ router.get('/', async (req, res) => {
     }
     console.log("ricerca filtrata");
 });
+
+
+
+// Ottieni i primi x eventi non filtrati
+router.get('/', async (req, res) => {
+    try {
+      
+        // Legge il parametro `start` dalla query string e lo converte in un numero
+        const start = parseInt(req.query.start, 10) || 0; // Default: 0 se non specificato
+
+        //data odierna
+        const data = new Date();
+
+        // Recupera i 100 eventi a partire dall'indice specificato
+        const results = await Event.find({date: { $gt: data }  // Filtro per eventi dopo di una certa data
+        }).skip(start).limit(100);
+        
+        res.send(results);
+
+    } catch (error) {
+        console.log("Errore durante il recupero degli eventi:", error.message);
+        res.status(500).send("Errore durante il recupero degli eventi");
+    }
+    console.log("ricerca filtrata");
+});
+
 
 // Crea un nuovo evento
 router.post('/', (req, res) => {
@@ -49,6 +81,8 @@ router.post('/', (req, res) => {
         });
 });
 
+
+//restituisce il numero di partecipanti ad un dato evento
 router.get('/partecipants', async (req, res) => {
     try {
         //parametri del filtro
@@ -61,7 +95,7 @@ router.get('/partecipants', async (req, res) => {
         }
 
         // Conta i partecipanti per l'evento
-        const participantsCount = await participation.countDocuments({ event_id });
+        const participantsCount = await Partecipation.countDocuments({ event_id });
         
         res.send(results);
 
@@ -71,6 +105,7 @@ router.get('/partecipants', async (req, res) => {
     }
     console.log("numero partecipanti");
 });
+
 
 // Ottieni evento per ID
 router.get('/:id',async (req, res) => {
@@ -85,8 +120,10 @@ router.get('/:id',async (req, res) => {
     }
 });
 
+
 // Aggiorna evento per ID
 router.patch('/:id', authenticateJWT, async (req, res) => {
+
     try {
         // Ottieni l'evento tramite ID
         const event = await Event.findById(req.params.id);
@@ -138,6 +175,22 @@ router.delete('/:id', authenticateJWT, async (req, res) => {
     } catch (err) {
         console.error('Errore durante l\'eliminazione dell\'evento:', err);
         res.status(500).json({ message: 'Errore durante l\'eliminazione dell\'evento' });
+    }
+});
+
+
+//cambiare url
+
+// Elimina draft per id
+router.delete('/:idd',async (req, res) => {
+    try {
+        const deletedEvent = await Draft.findByIdAndDelete(req.params.id);
+        if (!deletedEvent) {
+            return res.status(404).json({ message: 'Evento non trovato' });
+        }
+        res.json({ message: 'Evento eliminato con successo', deletedEvent });
+    } catch (err) {
+        res.status(500).json({ message: 'Errore del server', error: err.message });
     }
 });
 

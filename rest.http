@@ -1,4 +1,8 @@
-GET http://localhost:3000/eventi?price=700&date="2024-11-19"
+GET http://localhost:3000/eventi?price=701&date="2026-11-19"
+
+###
+
+GET http://localhost:3000/eventi?start=2
 
 ###
 

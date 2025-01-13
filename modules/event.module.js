@@ -18,10 +18,23 @@ const eventSchema = new Schema({
         type: Number,
         required: true
     },
-    creator: { type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', 
-        required: true 
-    } // Campo per l'utente creatore
+    target: {
+        type: String,
+        required: true
+    },
+    category: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    max_subs: {
+        type: Number,
+        required: true
+    }
+
 });
 
 const Event = mongoose.model('events', eventSchema);
