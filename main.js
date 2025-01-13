@@ -3,6 +3,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const authenticateJWT = require('./middlewares/authenticateJWT');
+const cors = require('cors');
+
+const authenticateJWT = require('./middlewares/authenticateJWT');
+
 const Event = require('./modules/event.module');
 const Record = require('./modules/record.module');
 const Partecipation = require('./modules/partecipation.module');
@@ -15,7 +20,7 @@ app.use(express.json());
 
 // Connessione al database MongoDB
 const password=process.env.PASSWORD;
-const user=process.env.USER;
+const user = process.env.USER;
 console.log(password);
 console.log(user);
 
@@ -34,24 +39,17 @@ mongoose.connect(uri)
 
 app.use(cors());
 
-// Importa la route per gli eventi
+// Importa le route
 const eventRoute = require('./routes/event.route');
-app.use('/eventi', eventRoute);
-
-// Importa la route per il controllo
-const controlRoute = require('./routes/control.route');
-app.use('/control', controlRoute);
-
-// Importa la route per le partecipazioni
 const partecipationRoute = require('./routes/partecipation.route');
-app.use('/partecipation', partecipationRoute);
-
 const registrationRoute = require('./routes/registration.route');
-app.use('/registration', registrationRoute);
-
 const accessRoute = require('./routes/access.route');
-const { title } = require('process');
-app.use('/access', accessRoute);
+
+// Usa le route
+app.use('/eventi', authenticateJWT, eventRoute);  // Protegge la route per gli eventi
+app.use('/partecipazione', authenticateJWT, partecipationRoute);  // Protegge la partecipazione
+app.use('/registration', registrationRoute);  // Non protetta
+app.use('/access', accessRoute);  // Non protetta
 
 
 // Middleware per gestire errori 404
@@ -60,6 +58,8 @@ app.use((req, res, next) => {
     err.status = 404;
     next(err);
 });
+
+
 
 // Middleware globale per gestione errori
 app.use((err, req, res, next) => {
