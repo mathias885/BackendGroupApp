@@ -1,9 +1,19 @@
 const http = require('http');
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 require('dotenv').config();
 const authenticateJWT = require('./middlewares/authenticateJWT');
 const cors = require('cors');
+
+const authenticateJWT = require('./middlewares/authenticateJWT');
+
+const Event = require('./modules/event.module');
+const Record = require('./modules/record.module');
+const Partecipation = require('./modules/partecipation.module');
+const Organization = require('./modules/organizations.module');
+const cron = require('node-cron');
+
 
 const app = express();
 app.use(express.json());
@@ -26,6 +36,7 @@ mongoose.connect(uri)
 
 
 
+app.use(cors());
 
 // Importa le route
 const eventRoute = require('./routes/event.route');
@@ -59,8 +70,68 @@ app.use((err, req, res, next) => {
     });
 });
 
+//elimina gli eventi vecchi
+async function deleteOldEvents() {
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Imposta l'orario di oggi alle 00:00
+        const oldEvents = await Event.find({ date: { $lt: today } });
+
+
+        if(oldEvents>0){
+
+            const Record =[];
+
+            for(const event of oldEvents){
+
+                Record.push({
+                    title: event.title,
+                    date: event.date,
+                    location: event.location,
+                    price: event.price,
+                    category: event.category,
+                    description: event.description,
+                    max_subs: event.max_subs,
+                    subs: await partecipants(event._id),
+                    orgnizer: await organizer(event._id)
+                })
+            }
+        }
+
+        const result = await Event.deleteMany({ date: { $lt: today } });
+
+    } catch (error) {
+        console.error("Errore durante l'eliminazione degli eventi:", error.message);
+    }
+
+
+}
+
+
+//chiama deleteOldEvents ogni giorno a mezzanotte
+cron.schedule('0 0 * * *', () => {
+    console.log("pulizia eventi");
+    deleteOldEvents();
+});
+
+//ritorna il numero di parteciapnti all evento
+async function partecipants(id){
+
+    const participantsCount = await Partecipation.countDocuments({ event_id });
+    
+    return partecipationCount
+}
+
+//ritorna l id dell organizzatore di un evento
+async function organizer(id){
+
+    const organizationRecord = await Organization.findOne({ eventID: eventId });
+
+    return organizationRecord.userID;
+}
+
 // Endpoint principali
-app.get('/', (req, res) => {
+/* app.get('/', (req, res) => {
     console.log("URL richiesto:", req.url);
     console.log("Metodo HTTP:", req.method);
     res.send("Benvenuto nell'API per gli eventi");
@@ -89,3 +160,4 @@ app.delete('/eventi', (req, res) => {
 app.listen(3000, () => {
     console.log("Server avviato su porta 3000");
 });
+ */

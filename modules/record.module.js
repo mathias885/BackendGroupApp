@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const eventSchema = new Schema({
+const recordSchema = new Schema({
     title: {
         type: String,
         required: true
@@ -18,11 +18,6 @@ const eventSchema = new Schema({
         type: Number,
         required: true
     },
-
-    target: {
-        type: String,
-        required: true
-    },
     category: {
         type: String,
         required: true
@@ -34,8 +29,16 @@ const eventSchema = new Schema({
     max_subs: {
         type: Number,
         required: true
+    },
+    subs: {
+        type: Number,
+        required:true
+    },
+    orgnizer:{
+        type: Schema.Types.ObjectId, 
+        required: true
     }
 });
 
-const Event = mongoose.model('events', eventSchema);
-module.exports = Event;
+const Record = mongoose.model('records', recordSchema);
+module.exports = Record;

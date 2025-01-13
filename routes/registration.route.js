@@ -28,6 +28,7 @@ router.post('/', async (req, res) => {
                 });
         }
 
+
         // Controlla se l'userId usato è già presente nel database
         const existingUserby_id = await User.findOne({ userId });
         if (existingUserby_id) {
