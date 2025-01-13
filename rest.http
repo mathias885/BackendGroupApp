@@ -5,7 +5,8 @@ GET http://localhost:3000/eventi?price=700&date="2024-11-19"
 POST http://localhost:3000/eventi
 Content-Type: application/json
 
-{"title": "Evento 6",
+{
+  "title": "Evento 6",
   "date": "2024-11-17T00:00:00.000Z",
   "location": "Milano",
   "price": 30
