@@ -42,13 +42,29 @@ POST http://localhost:3000/registration
 Content-Type: application/json
 
 {
-  "mail":"giuliano@gmail.com",
-  "password":"4654988",
-  "name":"giulianio",
-  "dateOfBirth":"2000-12-30T00:00:00.000Z",
-  "surname":"zambelli",
-  "telephone":337
+  "mail":"giovanni@pascoli1",
+  "userId":"giopascoli1",
+  "password":"lepalle",
+  "name":"giovanni",
+  "dateOfBirth":"2024-11-17T00:00:00.000Z",
+  "surname":"pascoli",
+  "telephone":333
 }
+
+###
+POST http://localhost:3000/registration
+Content-Type: application/json
+
+{
+  "mail": "esempio@email.com",
+  "userId": "utente123",
+  "password": "password123",
+  "name": "Mario",
+  "dateOfBirth": "1990-05-10",
+  "surname": "Rossi",
+  "telephone": "1234567890"
+}
+
 
 ###
 POST http://localhost:3000/access

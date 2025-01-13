@@ -2,6 +2,7 @@ const http = require('http');
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const authenticateJWT = require('./middlewares/authenticateJWT');
 
 const app = express();
 app.use(express.json());
@@ -24,23 +25,17 @@ mongoose.connect(uri)
 
 
 
-// Importa la route per gli eventi
+// Importa le route
 const eventRoute = require('./routes/event.route');
-app.use('/eventi', eventRoute);
-
-// Importa la route per il controllo
-const controlRoute = require('./routes/control.route');
-app.use('/control', controlRoute);
-
-// Importa la route per le partecipazioni
 const partecipationRoute = require('./routes/partecipation.route');
-app.use('/partecipation', partecipationRoute);
-
 const registrationRoute = require('./routes/registration.route');
-app.use('/registration', registrationRoute);
-
 const accessRoute = require('./routes/access.route');
-app.use('/access', accessRoute);
+
+// Usa le route
+app.use('/eventi', authenticateJWT, eventRoute);  // Protegge la route per gli eventi
+app.use('/partecipazione', authenticateJWT, partecipationRoute);  // Protegge la partecipazione
+app.use('/registration', registrationRoute);  // Non protetta
+app.use('/access', accessRoute);  // Non protetta
 
 
 // Middleware per gestire errori 404

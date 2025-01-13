@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const partecipationSchema = new Schema({
+const organizationSchema = new Schema({
     
     userID: {
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId, 
         required: true
     },
     eventID: {
@@ -13,5 +13,5 @@ const partecipationSchema = new Schema({
     }
 });
 
-const partecipation = mongoose.model('Partecipation', partecipationSchema);
-module.exports = partecipation;
+const Organization = mongoose.model('Organizations', organizationSchema);
+module.exports = Organization;

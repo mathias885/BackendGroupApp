@@ -1,9 +1,14 @@
 const { type } = require('express/lib/response');
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     mail:{
+        type: String,
+        required:true
+    },
+    userId:{
         type: String,
         required:true
     },
@@ -29,9 +34,8 @@ const userSchema = new Schema({
     }
 });
 
-userSchema.methods.comparePassword = function(plainPassword) {
-    // Compara le password come stringhe (no hashing)
-    return this.password === plainPassword;
+userSchema.methods.comparePassword = async function (candidatePassword) {
+    return bcrypt.compare(candidatePassword, this.password);
 };
 
 const User = mongoose.model('User', userSchema);
