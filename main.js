@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const authenticateJWT = require('./middlewares/authenticateJWT');
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
@@ -45,6 +46,8 @@ app.use((req, res, next) => {
     err.status = 404;
     next(err);
 });
+
+
 
 // Middleware globale per gestione errori
 app.use((err, req, res, next) => {
