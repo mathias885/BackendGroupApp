@@ -33,6 +33,31 @@ router.post('/', async (req, res) => {
     }
 });
 
+
+
+// Rotta POST per accedere all'account con JWT
+router.post('/token_access', authenticateJWT, async (req, res) => {
+    try {
+        const userId = req.user.userId; // L'ID utente viene decodificato dal middleware
+
+        // Cerca l'utente nel database usando userId
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'Utente non trovato' });
+        }
+
+        // Restituisci i dati dell'utente
+        res.json({
+            message: 'Accesso effettuato con successo',
+            user, // Puoi includere solo i campi necessari dell'utente
+        });
+    } catch (err) {
+        console.error('Errore nell\'accesso all\'account:', err.message);
+        res.status(500).json({ error: 'Errore interno del server' });
+    }
+});
+
+
 // Logout Route
 router.post('/logout', (req, res) => {
     res.json({ message: 'Logged out successfully' });

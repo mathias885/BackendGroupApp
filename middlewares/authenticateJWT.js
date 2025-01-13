@@ -1,5 +1,9 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET || 'default_secret_key';
+const JWT_SECRET = process.env.JWT_SECRET || null;
+
+if (!JWT_SECRET) {
+    throw new Error("JWT_SECRET non definito! Assicurati di avere una chiave segreta nel file .env");
+}
 
 function authenticateJWT(req, res, next) {
     const authHeader = req.headers.authorization;
@@ -19,7 +23,10 @@ function authenticateJWT(req, res, next) {
         }
 
         // Aggiunge i dati decodificati dell'utente alla richiesta
-        req.user = user; 
+        req.user = user;
+
+        // Log di debugging
+        console.log("Token valido per l'utente:", user);
 
         // Passa alla prossima funzione o route
         next();
@@ -27,3 +34,4 @@ function authenticateJWT(req, res, next) {
 }
 
 module.exports = authenticateJWT;
+
