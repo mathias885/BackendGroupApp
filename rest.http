@@ -9,7 +9,9 @@ GET http://localhost:3000/eventi?start=2
 POST http://localhost:3000/eventi
 Content-Type: application/json
 
-{"title": "Evento 5",
+
+{
+  "title": "Evento 5",
   "date": "2025-05-25T00:00:00.000Z",
   "location": "siracusa",
   "price": 1

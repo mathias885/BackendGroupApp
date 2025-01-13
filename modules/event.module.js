@@ -18,6 +18,7 @@ const eventSchema = new Schema({
         type: Number,
         required: true
     },
+
     target: {
         type: String,
         required: true
@@ -34,7 +35,6 @@ const eventSchema = new Schema({
         type: Number,
         required: true
     }
-
 });
 
 const Event = mongoose.model('events', eventSchema);

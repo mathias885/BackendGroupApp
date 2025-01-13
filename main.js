@@ -3,6 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const authenticateJWT = require('./middlewares/authenticateJWT');
+const cors = require('cors');
 
 const authenticateJWT = require('./middlewares/authenticateJWT');
 
@@ -18,9 +20,10 @@ app.use(express.json());
 
 // Connessione al database MongoDB
 const password=process.env.PASSWORD;
+const user = process.env.USER;
 console.log(password);
 
-const uri = `mongodb+srv://leonerder:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
+const uri = `mongodb+srv://${user}:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
 console.log(uri);
 
 mongoose.connect(uri)
@@ -48,13 +51,14 @@ app.use('/registration', registrationRoute);  // Non protetta
 app.use('/access', accessRoute);  // Non protetta
 
 
-
 // Middleware per gestire errori 404
 app.use((req, res, next) => {
     const err = new Error("Pagina non trovata");
     err.status = 404;
     next(err);
 });
+
+
 
 // Middleware globale per gestione errori
 app.use((err, req, res, next) => {
