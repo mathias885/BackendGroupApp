@@ -16,7 +16,7 @@ router.get('/filtered', async (req, res) => {
         price=req.query.price;
         date=req.query.date;
 
-        const results = await Event.find({
+        const results = await Draft.find({
             price: { $lt: price },  // Filtro per eventi che costano meno di 50
             date: { $lt: date }  // Filtro per eventi prima di una certa data
         }).skip(start).limit(100);
@@ -43,7 +43,7 @@ router.get('/', async (req, res) => {
         const data = new Date();
 
         // Recupera i 100 eventi a partire dall'indice specificato
-        const results = await Event.find({date: { $gt: data }  // Filtro per eventi dopo di una certa data
+        const results = await Draft.find({date: { $gt: data }  // Filtro per eventi dopo di una certa data
         }).skip(start).limit(100);
         
         res.send(results);

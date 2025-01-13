@@ -30,8 +30,8 @@ const draftSchema = new Schema({
         type: Number,
         required: true
     },
-    orgnizer:{
-        type: Schema.Types.ObjectId, 
+    organizer:{
+        type: String, 
         required: true
     }
 });

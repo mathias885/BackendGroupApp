@@ -40,12 +40,15 @@ const eventRoute = require('./routes/event.route');
 const partecipationRoute = require('./routes/partecipation.route');
 const registrationRoute = require('./routes/registration.route');
 const accessRoute = require('./routes/access.route');
+const draftRoute = require('./routes/draft.route')
+
 
 // Usa le route
 app.use('/eventi', eventRoute);  // Protegge la route per gli eventi
 app.use('/partecipazione', authenticateJWT, partecipationRoute);  // Protegge la partecipazione
 app.use('/registration', registrationRoute);  // Non protetta
 app.use('/access', accessRoute);  // Non protetta
+app.use('/drafts', draftRoute); //da proteggere in futuro
 
 
 // Middleware per gestire errori 404

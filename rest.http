@@ -1,8 +1,12 @@
-GET http://localhost:3000/eventi?price=701&date="2026-11-19"
+GET http://localhost:3000/eventi?price=0&date="2026-11-19"
 
 ###
 
-GET http://localhost:3000/eventi?start=2
+GET http://localhost:3000/eventi
+
+###
+
+GET http://localhost:3000/drafts
 
 ###
 
@@ -11,10 +15,15 @@ Content-Type: application/json
 
 
 {
-  "title": "Evento 5",
-  "date": "2025-05-25T00:00:00.000Z",
+  "title": "Evento 2",
+  "date": "2027-05-25T00:00:00.000Z",
   "location": "siracusa",
-  "price": 1
+  "price": "1",
+  "target": "Ragazzi",
+  "category": "Sport",
+  "description": "esempio",
+  "max_subs": "100",
+  "organizer": "GroupAppAdmin_3"
 }
 ###
 
@@ -62,13 +71,13 @@ POST http://localhost:3000/registration
 Content-Type: application/json
 
 {
-  "mail": "esempio@email.com",
-  "userId": "utente123",
-  "password": "password123",
-  "name": "Mario",
-  "dateOfBirth": "1990-05-10",
-  "surname": "Rossi",
-  "telephone": "1234567890"
+  "mail": "leonardomosca04@gmail.com",
+  "userId": "GroupAppAdmin_3",
+  "password": "GroupAppAdmin_3",
+  "name": "Groupapp",
+  "dateOfBirth": "2004-01-06",
+  "surname": "App",
+  "telephone": "333"
 }
 
 
@@ -77,8 +86,8 @@ POST http://localhost:3000/access
 Content-Type: application/json
 
 {
-  "mail":"giovanni@pascoli",
-  "password":"lepalle"
+  "mail":"leonardomosca04@gmail.com",
+  "password":"GroupAppAdmin_3"
 }
 
 ###
