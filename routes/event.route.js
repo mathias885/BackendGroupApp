@@ -169,7 +169,7 @@ router.delete('/:id', authenticateJWT, async (req, res) => {
             return res.status(404).json({ message: 'Evento non trovato' });
         }
 
-        // Verifica che l'utente sia il creatore dell'evento
+        // Verifica che l'utente sia il creatore dell'evento ??????????????
         if (event.creator.toString() !== req.user.userId) {
             return res.status(403).json({ message: 'Non hai i permessi per eliminare questo evento' });
         }
@@ -188,13 +188,24 @@ router.delete('/:id', authenticateJWT, async (req, res) => {
 //cambiare url
 
 // Elimina draft per id
-router.delete('/:idd',async (req, res) => {
+router.delete('/:idd',authenticateJWT, async (req, res) => {
     try {
-        const deletedEvent = await Draft.findByIdAndDelete(req.params.id);
-        if (!deletedEvent) {
+        // Ottieni l'evento tramite ID
+        const draft = await Draft.findById(req.params.id);
+
+        if (!draft) {
             return res.status(404).json({ message: 'Evento non trovato' });
         }
-        res.json({ message: 'Evento eliminato con successo', deletedEvent });
+
+        // Verifica che l'utente sia il creatore dell'evento
+        if (draft.creator.toString() !== req.user.userId) {
+            return res.status(403).json({ message: 'Non hai i permessi per eliminare questo evento' });
+        }
+
+        // Elimina l'evento
+        await draft.remove();
+
+        res.json({ message: 'draft eliminata con successo', deletedEvent });
     } catch (err) {
         res.status(500).json({ message: 'Errore del server', error: err.message });
     }

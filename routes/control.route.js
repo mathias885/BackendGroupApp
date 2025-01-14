@@ -28,7 +28,7 @@ router.get('/:drafts',authenticateJWT,async (req, res) => {
         const results = await Event.find().skip(start).limit(100);
         
         res.send(results);
-        
+
 
 
     } catch (err) {
@@ -72,13 +72,14 @@ router.post('/:id',authenticateJWT,async (req, res) => {
 
 
 //elimina un dato evento con id
-router.delete('/:id',authenticateJWT,async (req, res) => {
+router.delete('/:id', authenticateJWT, async (req, res) => {
     try {
         //controlla che l'user id appartenga ad un admin
         const u = await User.findById(req.user.userId);
         if(!u.isAdmin){return res.status(404).json({ message: 'non sei un admin' });}
 
-        const deletedEvent = await Event.findByIdAndDelete(req.params.id);
+        const eventId = new mongoose.Types.ObjectId(req.user.userId);
+        const deletedEvent = await Event.findByIdAndDelete(eventId);
         if (!deletedEvent) {
             return res.status(404).json({ message: 'Evento non trovato' });
         }

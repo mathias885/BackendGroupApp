@@ -143,5 +143,11 @@ Content-Type: application/json
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1NGIwOTQwYzQ2ZDhjYWU1YWM3ZDUiLCJpYXQiOjE3MzY3ODk3MzUsImV4cCI6MTczNjc5MzMzNX0.eKriHLfR5Hx6c8TD1RMN-qTu7Z29ThWlPeVq8_dTKLk"
 }
 
+###☻
+DELETE http://localhost:3000/control/id
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1MjI3NWMyOGE5ZDljN2FhNDQ3OWEiLCJpYXQiOjE3MzY4NzMwNjUsImV4cCI6MTczNjg3NjY2NX0.3TaH13kbtoGOeqPTNNhFnU_cekEWZz6Hhtup6notbkc
+Content-Type: application/json
 
-
+{
+    "id": "676d6b2da7ca56cf8a04848c"
+}
