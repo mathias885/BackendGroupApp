@@ -16,9 +16,10 @@ app.use(express.json());
 
 // Connessione al database MongoDB
 const password=process.env.PASSWORD;
+const user=process.env.USER;
 console.log(password);
 
-const uri = `mongodb+srv://riccardoromeo03:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
+const uri = `mongodb+srv://${user}:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
 console.log(uri);
 
 mongoose.connect(uri)
@@ -52,6 +53,8 @@ const accessRoute = require('./routes/access.route');
 const { title } = require('process');
 app.use('/access', accessRoute);
 
+const draftRoute = require('./routes/draft.route');
+app.use('/drafts', draftRoute);
 
 
 // Middleware per gestire errori 404
