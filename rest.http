@@ -125,6 +125,16 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:3000/control/id
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1NGIwOTQwYzQ2ZDhjYWU1YWM3ZDUiLCJpYXQiOjE3MzY4Njg4MjUsImV4cCI6MTczNjg3MjQyNX0.ydi2-GDOlPpNHVq5bbMoPb8qIqWIjZ4XaKbD03XCizw
+Content-Type: application/json
+
+{
+    "id": "676d6b2da7ca56cf8a04848c"
+}
+
+
+###
 POST http://localhost:3000/access/token_access
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1NGIwOTQwYzQ2ZDhjYWU1YWM3ZDUiLCJpYXQiOjE3MzY3ODk3MzUsImV4cCI6MTczNjc5MzMzNX0.eKriHLfR5Hx6c8TD1RMN-qTu7Z29ThWlPeVq8_dTKLk
 Content-Type: application/json

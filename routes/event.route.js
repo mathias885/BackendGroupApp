@@ -11,16 +11,20 @@ const Schema = mongoose.Schema;
 // Ottieni tutti gli eventi con prezzo superiore a 50
 router.get('/filtered', async (req, res) => {
     try {
-        //parametri del filtro
-        const start = parseInt(req.query.start, 10) || 0; // Default: 0 se non specificato
-        price=req.query.price;
-        date=req.query.date;
 
-        const results = await Event.find({
-            price: { $lt: price },  // Filtro per eventi che costano meno di 50
-            date: { $lt: date }  // Filtro per eventi prima di una certa data
-        }).skip(start).limit(100);
-        
+         // Parametri del filtro dal corpo JSON
+         const { start = 0, price, date, category, target } = req.body;
+
+         // Costruzione dinamica dei filtri
+         const filters = {};
+         if (price) filters.price = { $lt: price };
+         if (date) filters.date = { $gt: date };
+         if (category) filters.category = category;
+         if (target) filters.target = target;
+ 
+         // Recupero eventi con i filtri
+         const results = await Event.find(filters).skip(start).limit(100);
+         
         res.send(results);
 
     } catch (error) {

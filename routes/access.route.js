@@ -36,7 +36,6 @@ router.post('/', async (req, res) => {
 });
 
 
-
 // Rotta POST per accedere all'account con JWT
 router.post('/token_access', authenticateJWT, async (req, res) => {
     try {

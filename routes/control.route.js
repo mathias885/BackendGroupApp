@@ -2,17 +2,25 @@ const express = require('express');
 const router = express.Router();
 const Draft = require('../modules/event_draft.module');
 const Event = require('../modules/event.module');
+const User = require('../modules/user.module');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+const authenticateJWT = require('../middlewares/authenticateJWT');
 
 
 //approva un dato evento con id
-router.post('/:id',async (req, res) => {
+router.post('/:id',authenticateJWT,async (req, res) => {
+    
     try {
+        const u = await User.findById(req.user.userId);
+        console.log(u.isAdmin);
+        if(!u.isAdmin){return res.status(404).json({ message: 'non sei un admin' });}
+
+
         console.log(req.body._id);
 
         let id = req.body._id;
-       const draft = await Draft.findById(id);
+        const draft = await Draft.findById(id);
         
         console.log("draft found");
         if (!draft) {
@@ -39,8 +47,13 @@ router.post('/:id',async (req, res) => {
 
 
 //elimina un dato evento con id
-router.delete('/:id',async (req, res) => {
+router.delete('/:id',authenticateJWT,async (req, res) => {
     try {
+
+        const u = await User.findById(req.user.userId);
+        console.log(u.isAdmin);
+        if(!u.isAdmin){return res.status(404).json({ message: 'non sei un admin' });}
+
         const deletedEvent = await Event.findByIdAndDelete(req.params.id);
         if (!deletedEvent) {
             return res.status(404).json({ message: 'Evento non trovato' });
