@@ -5,7 +5,6 @@ const authenticateJWT = require('../middlewares/authenticateJWT');
 const Draft = require('../modules/event_draft.module');
 const Partecipation = require('../modules/partecipation.module');
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
 
 // Ottieni tutti gli eventi con prezzo superiore a 50
@@ -127,38 +126,6 @@ router.get('/:id',async (req, res) => {
 });
 
 
-// Aggiorna evento per ID
-router.patch('/:id', authenticateJWT, async (req, res) => {
-
-    try {
-        // Ottieni l'evento tramite ID
-        const event = await Event.findById(req.params.id);
-
-        if (!event) {
-            return res.status(404).json({ message: 'Evento non trovato' });
-        }
-
-        // Verifica che l'utente sia il creatore dell'evento
-        if (event.creator.toString() !== req.user.userId) {
-            return res.status(403).json({ message: 'Non hai i permessi per modificare questo evento' });
-        }
-
-        // Procedi con l'aggiornamento dell'evento 
-        event.title = req.body.title || event.title;
-        event.date = req.body.date || event.date;
-        event.location = req.body.location || event.location;
-        event.price = req.body.price || event.price;
-
-        // Salva le modifiche
-        await event.save();
-
-        res.json({ message: 'Evento aggiornato con successo' });
-    } catch (err) {
-        console.error('Errore durante l\'aggiornamento dell\'evento:', err);
-        res.status(500).json({ message: 'Errore durante l\'aggiornamento dell\'evento' });
-    }
-});
-
 // Elimina evento per ID
 router.delete('/:id', authenticateJWT, async (req, res) => {
     try {
@@ -190,11 +157,12 @@ router.delete('/:id', authenticateJWT, async (req, res) => {
 
 //cambiare url
 
-// Elimina draft per id
+// Elimina draft per id preso da query
 router.delete('/:idd',authenticateJWT, async (req, res) => {
     try {
         // Ottieni l'evento tramite ID
-        const draft = await Draft.findById(req.params.id);
+        const draftid = new mongoose.Types.ObjectId(req.query.id)
+        const draft = await Draft.findById(draftid);
 
         if (!draft) {
             return res.status(404).json({ message: 'Evento non trovato' });
