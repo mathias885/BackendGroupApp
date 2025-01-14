@@ -35,7 +35,7 @@ const draftSchema = new Schema({
         required: true
     },
     organizer:{
-        type: String, 
+        type: Schema.Types.ObjectId, 
         required: true
     }
 });

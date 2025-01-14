@@ -162,15 +162,18 @@ router.patch('/:id', authenticateJWT, async (req, res) => {
 // Elimina evento per ID
 router.delete('/:id', authenticateJWT, async (req, res) => {
     try {
+        const eventId=req.params.id;
+        const userId=req.user.userId;
         // Ottieni l'evento tramite ID
-        const event = await Event.findById(req.params.id);
+        const event = await Event.findById(eventId);
 
         if (!event) {
             return res.status(404).json({ message: 'Evento non trovato' });
         }
 
-        // Verifica che l'utente sia il creatore dell'evento ??????????????
-        if (event.creator.toString() !== req.user.userId) {
+        // Verifica che l'utente sia il creatore dell'evento 
+        const organizer = await Organizes.findOne({ eventId, userId });
+        if (!organizer) {
             return res.status(403).json({ message: 'Non hai i permessi per eliminare questo evento' });
         }
 
@@ -198,7 +201,7 @@ router.delete('/:idd',authenticateJWT, async (req, res) => {
         }
 
         // Verifica che l'utente sia il creatore dell'evento
-        if (draft.creator.toString() !== req.user.userId) {
+        if (draft.organizer !== req.user.userId) {
             return res.status(403).json({ message: 'Non hai i permessi per eliminare questo evento' });
         }
 

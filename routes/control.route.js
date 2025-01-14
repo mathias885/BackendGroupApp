@@ -4,7 +4,6 @@ const Draft = require('../modules/event_draft.module');
 const Event = require('../modules/event.module');
 const User = require('../modules/user.module');
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
 const authenticateJWT = require('../middlewares/authenticateJWT');
 
 
@@ -35,6 +34,7 @@ router.get('/:drafts',authenticateJWT,async (req, res) => {
         res.status(500).send("Errore durante il recupero dei drafts");
     }
 });
+
 //approva un dato evento con id
 router.post('/:id',authenticateJWT,async (req, res) => {
     
@@ -76,12 +76,13 @@ router.delete('/:id', authenticateJWT, async (req, res) => {
     try {
         //controlla che l'user id appartenga ad un admin
         const u = await User.findById(req.user.userId);
-        if(!u.isAdmin){return res.status(404).json({ message: 'non sei un admin' });}
+        if(!u.isAdmin){return res.status(403).json({ message: 'non sei un admin' });}
+        const eventId = new mongoose.Types.ObjectId(req.body.id);
+        console.log(eventId);
 
-        const eventId = new mongoose.Types.ObjectId(req.user.userId);
-        const deletedEvent = await Event.findByIdAndDelete(eventId);
+        const deletedEvent = await Draft.findByIdAndDelete(eventId);
         if (!deletedEvent) {
-            return res.status(404).json({ message: 'Evento non trovato' });
+            return res.status(405).json({ message: 'Evento non trovato' });
         }
         res.json({ message: 'Evento eliminato con successo', deletedEvent });
     } catch (err) {
