@@ -9,15 +9,40 @@ const authenticateJWT = require('../middlewares/authenticateJWT');
 
 
 //approva un dato evento con id
-router.post('/:id',authenticateJWT,async (req, res) => {
+router.get('/:drafts',authenticateJWT,async (req, res) => {
     
     try {
+
+        //controlla che l'user id appartenga ad un admin
         const u = await User.findById(req.user.userId);
-        console.log(u.isAdmin);
         if(!u.isAdmin){return res.status(404).json({ message: 'non sei un admin' });}
 
 
-        console.log(req.body._id);
+
+        // Legge il parametro `start` dalla query string e lo converte in un numero
+        const start = parseInt(req.query.start, 10) || 0; // Default: 0 se non specificato
+
+        //data odierna
+
+        // Recupera i 100 eventi a partire dall'indice specificato
+        const results = await Event.find().skip(start).limit(100);
+        
+        res.send(results);
+        
+
+
+    } catch (err) {
+        res.status(500).send("Errore durante il recupero dei drafts");
+    }
+});
+//approva un dato evento con id
+router.post('/:id',authenticateJWT,async (req, res) => {
+    
+    try {
+        //controlla che l'user id appartenga ad un admin
+        const u = await User.findById(req.user.userId);
+        if(!u.isAdmin){return res.status(404).json({ message: 'non sei un admin' });}
+
 
         let id = req.body._id;
         const draft = await Draft.findById(id);
@@ -49,9 +74,8 @@ router.post('/:id',authenticateJWT,async (req, res) => {
 //elimina un dato evento con id
 router.delete('/:id',authenticateJWT,async (req, res) => {
     try {
-
+        //controlla che l'user id appartenga ad un admin
         const u = await User.findById(req.user.userId);
-        console.log(u.isAdmin);
         if(!u.isAdmin){return res.status(404).json({ message: 'non sei un admin' });}
 
         const deletedEvent = await Event.findByIdAndDelete(req.params.id);
