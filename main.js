@@ -13,11 +13,13 @@ const cron = require('node-cron');
 
 const app = express();
 app.use(express.json());
+app.use(authenticateJWT);
 
 // Connessione al database MongoDB
 const password=process.env.PASSWORD;
-const user=process.env.USER;
+const user=process.env.USERNAME;
 console.log(password);
+console.log(user);
 
 const uri = `mongodb+srv://${user}:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
 console.log(uri);
@@ -153,11 +155,11 @@ app.post('/registration', async (req, res) => {
     res.send("Utente creato");
 });
 
-
+/*
 app.post('/eventi', (req, res) => {
     // Endpoint per la creazione di un nuovo evento
     res.send("Evento creato");
-});
+});*/
 
 app.delete('/eventi', (req, res) => {
     // Endpoint per la cancellazione di un evento

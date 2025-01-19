@@ -9,7 +9,7 @@ const Schema = mongoose.Schema;
 
 
 // Ottieni tutti gli eventi con prezzo superiore a 50
-router.get('/filtered', async (req, res) => {
+router.get('/filtered',authenticateJWT, async (req, res) => {
     try {
         //parametri del filtro
         const start = parseInt(req.query.start, 10) || 0; // Default: 0 se non specificato
@@ -33,7 +33,7 @@ router.get('/filtered', async (req, res) => {
 
 
 // Ottieni i primi x eventi non filtrati
-router.get('/', async (req, res) => {
+router.get('/',authenticateJWT, async (req, res) => {
     try {
       
         // Legge il parametro `start` dalla query string e lo converte in un numero
@@ -56,8 +56,8 @@ router.get('/', async (req, res) => {
 });
 
 
-// Crea un nuovo evento
-router.post('/', (req, res) => {
+// Crea un nuovo evento non serve perche sono creati su draft
+router.post('/',authenticateJWT, (req, res) => {
     console.log("Dati ricevuti per l'evento:", req.body);
     // Istanzia un nuovo evento con i dati ricevuti
     const eventInstance = new Draft({
@@ -85,7 +85,7 @@ router.post('/', (req, res) => {
 
 
 //restituisce il numero di partecipanti ad un dato evento
-router.get('/partecipants', async (req, res) => {
+router.get('/partecipants',authenticateJWT, async (req, res) => {
     try {
         //parametri del filtro
         event_id=req.query.id;
@@ -110,7 +110,7 @@ router.get('/partecipants', async (req, res) => {
 
 
 // Ottieni evento per ID
-router.get('/:id',async (req, res) => {
+router.get('/:id',authenticateJWT,async (req, res) => {
     try {
         const event = await Event.findById(req.params.id);
         if (!event) {
@@ -184,7 +184,7 @@ router.delete('/:id', authenticateJWT, async (req, res) => {
 //cambiare url
 
 // Elimina draft per id
-router.delete('/:idd',async (req, res) => {
+router.delete('/:idd',authenticateJWT,async (req, res) => {
     try {
         const deletedEvent = await Draft.findByIdAndDelete(req.params.id);
         if (!deletedEvent) {

@@ -151,3 +151,19 @@ Content-Type: application/json
 {
     "id": "6785287b43a347c53643546c"
 }
+
+###
+POST http://localhost:3000/eventi/create
+Content-Type: application/json
+
+{
+    "title": "Event Title",
+    "date": "2025-01-20T18:00:00Z",
+    "location": "Event Location",
+    "price": 100,
+    "target": "General Audience",
+    "category": "Conference",
+    "description": "Event description goes here.",
+    "max_subs": 200,
+}
+
