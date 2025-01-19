@@ -74,7 +74,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-//elimina gli eventi vecchi
+//elimina gli eventi vecchi, funziona????
 async function deleteOldEvents() {
     try {
         const today = new Date();
@@ -93,6 +93,7 @@ async function deleteOldEvents() {
                     date: event.date,
                     location: event.location,
                     price: event.price,
+                    target: event.target,
                     category: event.category,
                     description: event.description,
                     max_subs: event.max_subs,
@@ -123,7 +124,7 @@ async function partecipants(id){
 
     const participantsCount = await Partecipation.countDocuments({ event_id });
     
-    return partecipationCount
+    return participantsCount;
 }
 
 //ritorna l id dell organizzatore di un evento

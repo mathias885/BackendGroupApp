@@ -7,7 +7,7 @@ const Partecipation = require('../modules/partecipation.module');
 const mongoose = require('mongoose');
 
 
-// Ottieni tutti gli eventi con prezzo superiore a 50
+// mostra eventi filtrati, start = quanti eventi stai gia visualizzando
 router.get('/filtered', async (req, res) => {
     try {
 
@@ -35,7 +35,7 @@ router.get('/filtered', async (req, res) => {
 
 
 
-// Ottieni i primi x eventi non filtrati
+//  mostra eventi, start = quanti eventi stai gia visualizzando
 router.get('/', async (req, res) => {
     try {
       
@@ -59,7 +59,7 @@ router.get('/', async (req, res) => {
 });
 
 
-// Crea un nuovo evento
+// Crea un nuovo evento (draft)  |||| posso predndere user dall'autantication???
 router.post('/', (req, res) => {
     console.log("Dati ricevuti per l'evento:", req.body);
     // Istanzia un nuovo evento con i dati ricevuti
@@ -91,31 +91,25 @@ router.post('/', (req, res) => {
 router.get('/partecipants', async (req, res) => {
     try {
         //parametri del filtro
-        event_id=req.query.id;
-
-        const event = await Event.findById(event_id);
-
-        if (!event) {
-            return res.status(404).json({ message: 'Evento non trovato' });
-        }
-
+        const event_id = new mongoose.Types.ObjectId(req.query.id);
+        
         // Conta i partecipanti per l'evento
         const participantsCount = await Partecipation.countDocuments({ event_id });
         
-        res.send(results);
+        res.send(participantsCount);
 
     } catch (error) {
         console.log("Errore durante il recupero degli eventi:", error.message);
         res.status(500).send("Errore durante il recupero degli eventi");
     }
-    console.log("numero partecipanti");
 });
 
 
 // Ottieni evento per ID
 router.get('/:id',async (req, res) => {
     try {
-        const event = await Event.findById(req.params.id);
+        const event_id = new mongoose.Types.ObjectId(req.query.id);
+        const event = await Event.findById(event_id);
         if (!event) {
             return res.status(404).json({ message: 'Evento non trovato' });
         }
@@ -129,8 +123,9 @@ router.get('/:id',async (req, res) => {
 // Elimina evento per ID
 router.delete('/:id', authenticateJWT, async (req, res) => {
     try {
-        const eventId=req.params.id;
+        const eventId = new mongoose.Types.ObjectId(req.query.id);
         const userId=req.user.userId;
+
         // Ottieni l'evento tramite ID
         const event = await Event.findById(eventId);
 

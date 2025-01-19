@@ -35,8 +35,7 @@ router.post('/', (req, res) => {
 router.delete('/event', async (req, res) => {
     try {
         eventID = req.query.eventID;
-        console.log(eventID);
-        
+                
         const result = await partecipation.deleteMany({ eventID });
 
         if (result.deletedCount === 0) {

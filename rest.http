@@ -126,17 +126,17 @@ Content-Type: application/json
 
 ###
 POST http://localhost:3000/control/id
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1NGIwOTQwYzQ2ZDhjYWU1YWM3ZDUiLCJpYXQiOjE3MzY4Njg4MjUsImV4cCI6MTczNjg3MjQyNX0.ydi2-GDOlPpNHVq5bbMoPb8qIqWIjZ4XaKbD03XCizw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1MjI3NWMyOGE5ZDljN2FhNDQ3OWEiLCJpYXQiOjE3MzczMDU1NTgsImV4cCI6MTczNzMwOTE1OH0.WPdVEfR85VZDE1oNm4bN4RDVfWx4kpwzEGoJEN-9c6c
 Content-Type: application/json
 
 {
-    "id": "676d6b2da7ca56cf8a04848c"
+    "id": "6785290943a347c53643548d"
 }
 
 
 ###
 POST http://localhost:3000/access/token_access
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1NGIwOTQwYzQ2ZDhjYWU1YWM3ZDUiLCJpYXQiOjE3MzY3ODk3MzUsImV4cCI6MTczNjc5MzMzNX0.eKriHLfR5Hx6c8TD1RMN-qTu7Z29ThWlPeVq8_dTKLk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1MjI3NWMyOGE5ZDljN2FhNDQ3OWEiLCJpYXQiOjE3MzY4Nzk2MjcsImV4cCI6MTczNjg4MzIyN30.oQ1zHlBvg60jwyPbYx3ablilCrFIhzgRtXwsNlNDTgk
 Content-Type: application/json
 
 {
@@ -145,9 +145,14 @@ Content-Type: application/json
 
 ###☻
 DELETE http://localhost:3000/control/id
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1MjI3NWMyOGE5ZDljN2FhNDQ3OWEiLCJpYXQiOjE3MzY4NzMwNjUsImV4cCI6MTczNjg3NjY2NX0.3TaH13kbtoGOeqPTNNhFnU_cekEWZz6Hhtup6notbkc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1MjI3NWMyOGE5ZDljN2FhNDQ3OWEiLCJpYXQiOjE3MzY4Nzk2MjcsImV4cCI6MTczNjg4MzIyN30.oQ1zHlBvg60jwyPbYx3ablilCrFIhzgRtXwsNlNDTgk
 Content-Type: application/json
 
 {
     "id": "6785287b43a347c53643546c"
 }
+
+###
+GET http://localhost:3000/eventi/partecipants?id=6785290943a347c53643548d
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1MjI3NWMyOGE5ZDljN2FhNDQ3OWEiLCJpYXQiOjE3MzczMDU1NTgsImV4cCI6MTczNzMwOTE1OH0.WPdVEfR85VZDE1oNm4bN4RDVfWx4kpwzEGoJEN-9c6c
+Content-Type: application/json
