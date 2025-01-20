@@ -8,6 +8,16 @@ if (!JWT_SECRET) {
 function authenticateJWT(req, res, next) {
     const authHeader = req.headers.authorization;
 
+    // List of exempted routes
+    const exemptedRoutes = ['/registration', '/access'];
+
+    // Check if the current route is exempted
+    if (exemptedRoutes.some(route => req.path.startsWith(route))) {
+        console.log("Token check avoided for route:", req.path);
+        return next();
+    }
+
+
     // Verifica se l'intestazione di autorizzazione è presente
     if (!authHeader) {
         return res.status(401).json({ message: 'Autorizzazione mancante -+-' });
