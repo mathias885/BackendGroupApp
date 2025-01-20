@@ -3,7 +3,6 @@ const router = express.Router();
 const partecipation = require('../modules/partecipation.module');
 
 
-//assicurarsi che l id utente sia il proprio
 
 // Crea una nuova partecipazione
 router.post('/', (req, res) => {
@@ -11,6 +10,8 @@ router.post('/', (req, res) => {
 
     // Istanzia una nuova partecipazione con i dati ricevuti
     const eventInstance = new partecipation({
+
+        //cast a object id?????
         userID: req.body.user,
         eventID: req.body.event,
         
@@ -30,8 +31,10 @@ router.post('/', (req, res) => {
 
 
 
-// Elimina tutte le partecipazioni con l'ID dell'evento
 
+//ha senso??? serve??? o da fare solo quando viene eliminato un evento, incorporare in event delete????
+
+// Elimina tutte le partecipazioni con l'ID dell'evento
 router.delete('/event', async (req, res) => {
     try {
         eventID = req.query.eventID;
@@ -50,7 +53,7 @@ router.delete('/event', async (req, res) => {
 });
 
 
-
+//user da auth???
 // Elimina una partecipazione specifica dato userID ed eventID
 router.delete('/:single', async (req, res) => {
     try {

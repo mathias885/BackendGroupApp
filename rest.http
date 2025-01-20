@@ -1,16 +1,10 @@
-GET http://localhost:3000/eventi?price=0&date="2026-11-19"
-
-###
-
 GET http://localhost:3000/eventi
 
 ###
 
-GET http://localhost:3000/drafts
-
-###
 
 POST http://localhost:3000/eventi
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1MjI3NWMyOGE5ZDljN2FhNDQ3OWEiLCJpYXQiOjE3MzczNzQ2NzksImV4cCI6MTczNzM3ODI3OX0.OFd11KytKZI8HVwvoLBAkKCY3KSE-4YYiKCbKlu5zkg
 Content-Type: application/json
 
 
@@ -22,8 +16,7 @@ Content-Type: application/json
   "target": "Ragazzi",
   "category": "Sport",
   "description": "esempio",
-  "max_subs": "100",
-  "organizer": "GroupAppAdmin_3"
+  "max_subs": "100"
 }
 ###
 
@@ -31,55 +24,17 @@ GET http://localhost:3000/eventi/id
 
 ###
 
-PATCH http://localhost:3000/eventi/id
-
-###
-
 DELETE  http://localhost:3000/eventi/id
-
-###
-GET  http://localhost:3000/
 
 ###
 
 POST http://localhost:3000/partecipation
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1MjI3NWMyOGE5ZDljN2FhNDQ3OWEiLCJpYXQiOjE3MzczNzQ2NzksImV4cCI6MTczNzM3ODI3OX0.OFd11KytKZI8HVwvoLBAkKCY3KSE-4YYiKCbKlu5zkg
 Content-Type: application/json
 
 {"user": "676d6a9da7ca56cf8a048481",
   "event": "676d316e243039a057ef6e37"
 }
-
-###
-DELETE http://localhost:3000/partecipation/event?eventID=676d316e243039a057ef6e37
-
-###
-POST http://localhost:3000/registration
-Content-Type: application/json
-
-{
-  "mail":"giovanni@pascoli1",
-  "userId":"giopascoli1",
-  "password":"lepalle",
-  "name":"giovanni",
-  "dateOfBirth":"2024-11-17T00:00:00.000Z",
-  "surname":"pascoli",
-  "telephone":333
-}
-
-###
-POST http://localhost:3000/registration
-Content-Type: application/json
-
-{
-  "mail": "leonardomosca04@gmail.com",
-  "userId": "GroupAppAdmin_3",
-  "password": "GroupAppAdmin_3",
-  "name": "Groupapp",
-  "dateOfBirth": "2004-01-06",
-  "surname": "App",
-  "telephone": "333"
-}
-
 
 ###
 POST http://localhost:3000/access
@@ -88,15 +43,6 @@ Content-Type: application/json
 {
   "mail":"leonardomosca04@gmail.com",
   "password":"GroupAppAdmin_3"
-}
-
-###
-POST http://localhost:3000/control/id
-Content-Type: application/json
-
-{
-  "_id":"676d6b2da7ca56cf8a04848c"
- 
 }
 
 
@@ -154,5 +100,5 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3000/eventi/partecipants?id=6785290943a347c53643548d
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1MjI3NWMyOGE5ZDljN2FhNDQ3OWEiLCJpYXQiOjE3MzczMDU1NTgsImV4cCI6MTczNzMwOTE1OH0.WPdVEfR85VZDE1oNm4bN4RDVfWx4kpwzEGoJEN-9c6c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1MjI3NWMyOGE5ZDljN2FhNDQ3OWEiLCJpYXQiOjE3MzczNzQ2NzksImV4cCI6MTczNzM3ODI3OX0.OFd11KytKZI8HVwvoLBAkKCY3KSE-4YYiKCbKlu5zkg
 Content-Type: application/json

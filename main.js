@@ -17,7 +17,7 @@ app.use(authenticateJWT);
 
 // Connessione al database MongoDB
 const password=process.env.PASSWORD;
-const user=process.env.USERNAME;
+const user=process.env.USER;
 console.log(password);
 console.log(user);
 
@@ -55,8 +55,6 @@ const accessRoute = require('./routes/access.route');
 const { title } = require('process');
 app.use('/access', accessRoute);
 
-const draftRoute = require('./routes/draft.route');
-app.use('/drafts', draftRoute);
 
 
 // Middleware per gestire errori 404

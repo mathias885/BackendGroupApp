@@ -6,7 +6,7 @@ const Draft = require('../modules/event_draft.module');
 const Partecipation = require('../modules/partecipation.module');
 const mongoose = require('mongoose');
 
-
+//non serve auth!!!
 // Ottieni tutti gli eventi con prezzo superiore a 50
 router.get('/filtered',authenticateJWT, async (req, res) => {
     try {
@@ -34,7 +34,7 @@ router.get('/filtered',authenticateJWT, async (req, res) => {
 });
 
 
-
+//non serve auth!!!
 // Ottieni i primi x eventi non filtrati
 router.get('/',authenticateJWT, async (req, res) => {
     try {
@@ -59,19 +59,20 @@ router.get('/',authenticateJWT, async (req, res) => {
 });
 
 
-// Crea un nuovo evento
-router.post('/create',authenticateJWT, (req, res) => {
-    console.log("Dati ricevuti per l'evento:", req.body);
+// Crea un nuovo evento (draft)  |||| posso predndere user dall'autantication???
+router.post('/',authenticateJWT ,(req, res) => {
+    console.log("Dati ricevuti per l'evento:", req.user._id);
     // Istanzia un nuovo evento con i dati ricevuti
     const eventInstance = new Draft({
         title: req.body.title,
         date: req.body.date,
         location: req.body.location,
         price: req.body.price,
+        target: req.body.target,
         category: req.body.category,
         description: req.body.description,
         max_subs: req.body.max_subs,
-
+        organizer: req.user._id // id da auth???
     });
 
     // Salva l'evento nel database
@@ -86,7 +87,7 @@ router.post('/create',authenticateJWT, (req, res) => {
         });
 });
 
-
+//non serve auth!!!
 //restituisce il numero di partecipanti ad un dato evento
 router.get('/partecipants',authenticateJWT, async (req, res) => {
     try {
@@ -104,7 +105,7 @@ router.get('/partecipants',authenticateJWT, async (req, res) => {
     }
 });
 
-
+//non serve auth!!!
 // Ottieni evento per ID
 router.get('/:id',authenticateJWT,async (req, res) => {
     try {
@@ -120,43 +121,12 @@ router.get('/:id',authenticateJWT,async (req, res) => {
 });
 
 
-// Aggiorna evento per ID DA RIMUOVERE
-router.patch('/:id', authenticateJWT, async (req, res) => {
 
-    try {
-        // Ottieni l'evento tramite ID
-        const event = await Event.findById(req.params.id);
-
-        if (!event) {
-            return res.status(404).json({ message: 'Evento non trovato' });
-        }
-
-        // Verifica che l'utente sia il creatore dell'evento
-        if (event.creator.toString() !== req.user.userId) {
-            return res.status(403).json({ message: 'Non hai i permessi per modificare questo evento' });
-        }
-
-        // Procedi con l'aggiornamento dell'evento 
-        event.title = req.body.title || event.title;
-        event.date = req.body.date || event.date;
-        event.location = req.body.location || event.location;
-        event.price = req.body.price || event.price;
-
-        // Salva le modifiche
-        await event.save();
-
-        res.json({ message: 'Evento aggiornato con successo' });
-    } catch (err) {
-        console.error('Errore durante l\'aggiornamento dell\'evento:', err);
-        res.status(500).json({ message: 'Errore durante l\'aggiornamento dell\'evento' });
-    }
-});
-
-// Elimina evento per ID
+// Elimina evento per ID ||| user da autentication???
 router.delete('/:id', authenticateJWT, async (req, res) => {
     try {
         const eventId = new mongoose.Types.ObjectId(req.query.id);
-        const userId=req.user.userId;
+        const userId=req.user.userId; // user da autentication????
 
         // Ottieni l'evento tramite ID
         const event = await Event.findById(eventId);
@@ -185,7 +155,7 @@ router.delete('/:id', authenticateJWT, async (req, res) => {
 //cambiare url
 
 // Elimina draft per id preso da query
-router.delete('/:idd',authenticateJWT, async (req, res) => {
+router.delete('/draft',authenticateJWT, async (req, res) => {
     try {
         // Ottieni l'evento tramite ID
         const draftid = new mongoose.Types.ObjectId(req.query.id)

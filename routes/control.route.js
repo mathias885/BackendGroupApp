@@ -22,19 +22,18 @@ router.get('/:drafts',authenticateJWT,async (req, res) => {
         // Legge il parametro `start` dalla query string e lo converte in un numero
         const start = parseInt(req.query.start, 10) || 0; // Default: 0 se non specificato
 
-        //data odierna
 
-        // Recupera i 100 eventi a partire dall'indice specificato
+        // Recupera i 100 eventi a partire dall'indice specificato saltando i primi "start"
         const results = await Event.find().skip(start).limit(100);
         
         res.send(results);
-
-
 
     } catch (err) {
         res.status(500).send("Errore durante il recupero dei drafts");
     }
 });
+
+
 
 //approva un dato evento con id
 router.post('/:id',authenticateJWT,async (req, res) => {
@@ -44,16 +43,14 @@ router.post('/:id',authenticateJWT,async (req, res) => {
         const u = await User.findById(req.user._id);
         if(!u.isAdmin){return res.status(404).json({ message: 'non sei un admin' });}
 
-
         const id = new mongoose.Types.ObjectId(req.body.id);
-
         const draft = await Draft.findById(id);
-        console.log(req.body.id);
-        console.log(id);
+
         if (!draft) {
             return res.status(404).json({ message: 'draft non trovato' });
         }
 
+        //crea l'evento
         const eventInstance = new Event({
             title: draft.title,
             date: draft.date,
@@ -65,16 +62,21 @@ router.post('/:id',authenticateJWT,async (req, res) => {
             max_subs: draft.max_subs
         });
     
+        //crea "chi lo organizza"
         const organizationInstance = new Organization({
             userID: draft.organizer,
-            eventID: eventInstance._id        });
+            eventID: eventInstance._id        
+        });
 
         // Salva l'evento nel database
         eventInstance.save();
         organizationInstance.save();
         
+
         await Draft.findByIdAndDelete(id);
-        res.json(draft);
+
+
+        res.json(draft);// serve??
     } catch (err) {
         res.status(500).send("Errore durante il recupero dei drafts");
     }
@@ -84,15 +86,18 @@ router.post('/:id',authenticateJWT,async (req, res) => {
 //elimina un dato evento con id
 router.delete('/:id', authenticateJWT, async (req, res) => {
     try {
+
         //controlla che l'user id appartenga ad un admin
         const u = await User.findById(req.user.userId);
         if(!u.isAdmin){return res.status(403).json({ message: 'non sei un admin' });}
-        const eventId = new mongoose.Types.ObjectId(req.query.id);
 
+        const eventId = new mongoose.Types.ObjectId(req.query.id);
         const deletedEvent = await Draft.findByIdAndDelete(eventId);
+
         if (!deletedEvent) {
             return res.status(405).json({ message: 'Evento non trovato' });
         }
+        
         res.json({ message: 'Evento eliminato con successo', deletedEvent });
     } catch (err) {
         res.status(500).json({ message: 'Errore del server', error: err.message });
