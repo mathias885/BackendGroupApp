@@ -4,7 +4,9 @@ const Event = require('../modules/event.module');
 const authenticateJWT = require('../middlewares/authenticateJWT');
 const Draft = require('../modules/event_draft.module');
 const Partecipation = require('../modules/partecipation.module');
+const Organization = require('../modules/organizations.module');
 const mongoose = require('mongoose');
+var ObjectId = require('mongodb').ObjectId;
 
 //non serve auth!!!
 // Ottieni tutti gli eventi con prezzo superiore a 50
@@ -61,7 +63,7 @@ router.get('/',authenticateJWT, async (req, res) => {
 
 // Crea un nuovo evento (draft)  |||| posso predndere user dall'autantication???
 router.post('/',authenticateJWT ,(req, res) => {
-    console.log("Dati ricevuti per l'evento:", req.user._id);
+    console.log("Dati ricevuti per l'evento:", req.user.userId);
     // Istanzia un nuovo evento con i dati ricevuti
     const eventInstance = new Draft({
         title: req.body.title,
@@ -72,7 +74,7 @@ router.post('/',authenticateJWT ,(req, res) => {
         category: req.body.category,
         description: req.body.description,
         max_subs: req.body.max_subs,
-        organizer: req.user._id // id da auth???
+        organizer: req.user.userId // id da auth???
     });
 
     // Salva l'evento nel database
@@ -107,7 +109,7 @@ router.get('/partecipants',authenticateJWT, async (req, res) => {
 
 //non serve auth!!!
 // Ottieni evento per ID
-router.get('/:id',authenticateJWT,async (req, res) => {
+router.get('/id',authenticateJWT,async (req, res) => {
     try {
         const event_id = new mongoose.Types.ObjectId(req.query.id);
         const event = await Event.findById(event_id);
@@ -123,7 +125,7 @@ router.get('/:id',authenticateJWT,async (req, res) => {
 
 
 // Elimina evento per ID ||| user da autentication???
-router.delete('/:id', authenticateJWT, async (req, res) => {
+router.delete('/event', authenticateJWT, async (req, res) => {
     try {
         const eventId = new mongoose.Types.ObjectId(req.query.id);
         const userId=req.user.userId; // user da autentication????
@@ -176,6 +178,51 @@ router.delete('/draft',authenticateJWT, async (req, res) => {
         res.json({ message: 'draft eliminata con successo', deletedEvent });
     } catch (err) {
         res.status(500).json({ message: 'Errore del server', error: err.message });
+    }
+});
+
+
+// Ottieni i primi 100 eventi organizzati dall'utente
+router.get('/yourEvents', authenticateJWT, async (req, res) => {
+    try {
+        const start = parseInt(req.query.start, 10) || 0;  // Default: 0 se non specificato
+
+        // Trova tutte le associazioni tra l'utente e gli eventi tramite la collezione Organizes
+        const organizes = await Organization.find({ userID: new ObjectId(req.user.userId) });
+
+        if (!organizes.length) {
+            return res.status(404).json({ message: 'Nessun evento trovato per questo utente' });
+        }
+
+        // Ottieni gli ID degli eventi associati all'utente
+        const eventIds = organizes.map(org => org.eventID);
+
+        // Recupera i primi 100 eventi a partire dagli ID trovati
+        const events = await Event.find({ _id: { $in: eventIds } })
+                                  .skip(start)
+                                  .limit(100);
+
+        res.json(events);
+    } catch (err) {
+        console.error('Errore durante il recupero degli eventi:', err.message);
+        res.status(500).send("Errore durante il recupero degli eventi");
+    }
+});
+
+// Ottieni le prime 100 draft organizzati dall'utente
+router.get('/yourDrafts', authenticateJWT, async (req, res) => {
+    try {
+        const start = parseInt(req.query.start, 10) || 0;  // Default: 0 se non specificato
+
+        // Recupera i primi 100 eventi a partire dagli ID trovati
+        const drafts = await Draft.find({ organizer: new ObjectId(req.user.userId) })
+                                  .skip(start)
+                                  .limit(100);
+
+        res.json(drafts);
+    } catch (err) {
+        console.error('Errore durante il recupero degli eventi:', err.message);
+        res.status(500).send("Errore durante il recupero degli eventi");
     }
 });
 

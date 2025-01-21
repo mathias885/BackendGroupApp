@@ -6,15 +6,17 @@ const User = require('../modules/user.module');
 const Organization = require('../modules/organizations.module');
 const mongoose = require('mongoose');
 const authenticateJWT = require('../middlewares/authenticateJWT');
+var ObjectId = require('mongodb').ObjectId;
 
 
-//mostra le dreft
-router.get('/:drafts',authenticateJWT,async (req, res) => {
+
+//mostra le draft
+router.get('/drafts',authenticateJWT,async (req, res) => {
     
     try {
 
         //controlla che l'user id appartenga ad un admin
-        const u = await User.findById(req.user._id);
+        const u = await User.findById(req.user.userId);
         if(!u.isAdmin){return res.status(404).json({ message: 'non sei un admin' });}
 
 
@@ -24,7 +26,7 @@ router.get('/:drafts',authenticateJWT,async (req, res) => {
 
 
         // Recupera i 100 eventi a partire dall'indice specificato saltando i primi "start"
-        const results = await Event.find().skip(start).limit(100);
+        const results = await Draft.find().skip(start).limit(100);
         
         res.send(results);
 
@@ -40,11 +42,12 @@ router.post('/:id',authenticateJWT,async (req, res) => {
     
     try {
         //controlla che l'user id appartenga ad un admin
-        const u = await User.findById(req.user._id);
+        const u = await User.findById(req.user.userId);
         if(!u.isAdmin){return res.status(404).json({ message: 'non sei un admin' });}
 
-        const id = new mongoose.Types.ObjectId(req.body.id);
+        const id=new ObjectId(req.body.id);
         const draft = await Draft.findById(id);
+        console.log(draft);
 
         if (!draft) {
             return res.status(404).json({ message: 'draft non trovato' });
@@ -56,7 +59,7 @@ router.post('/:id',authenticateJWT,async (req, res) => {
             date: draft.date,
             location: draft.location,
             price: draft.price,
-            targer: draft.target,
+            target: draft.target,
             category: draft.category,
             description: draft.description,
             max_subs: draft.max_subs
@@ -83,16 +86,37 @@ router.post('/:id',authenticateJWT,async (req, res) => {
 });
 
 
-//elimina un dato evento con id
-router.delete('/:id', authenticateJWT, async (req, res) => {
+//elimina una draft con id
+router.delete('/:id',authenticateJWT,async (req, res) => {
     try {
 
         //controlla che l'user id appartenga ad un admin
         const u = await User.findById(req.user.userId);
         if(!u.isAdmin){return res.status(403).json({ message: 'non sei un admin' });}
 
-        const eventId = new mongoose.Types.ObjectId(req.query.id);
-        const deletedEvent = await Draft.findByIdAndDelete(eventId);
+        const id=new ObjectId(req.query.id);
+        const deletedEvent = await Draft.findByIdAndDelete(id);
+
+        if (!deletedEvent) {
+            return res.status(405).json({ message: 'Draft non trovata' });
+        }
+        
+        res.json({ message: 'Draft eliminata con successo', deletedEvent });
+    } catch (err) {
+        res.status(500).json({ message: 'Errore del server', error: err.message });
+    }
+});
+
+//elimina un evento con id
+router.delete('/:id',authenticateJWT,async (req, res) => {
+    try {
+
+        //controlla che l'user id appartenga ad un admin
+        const u = await User.findById(req.user.userId);
+        if(!u.isAdmin){return res.status(403).json({ message: 'non sei un admin' });}
+
+        const id=new ObjectId(req.query.id);
+        const deletedEvent = await Event.findByIdAndDelete(id);
 
         if (!deletedEvent) {
             return res.status(405).json({ message: 'Evento non trovato' });
@@ -103,6 +127,5 @@ router.delete('/:id', authenticateJWT, async (req, res) => {
         res.status(500).json({ message: 'Errore del server', error: err.message });
     }
 });
-
 
 module.exports = router;
