@@ -143,7 +143,7 @@ Content-Type: application/json
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1NGIwOTQwYzQ2ZDhjYWU1YWM3ZDUiLCJpYXQiOjE3MzY3ODk3MzUsImV4cCI6MTczNjc5MzMzNX0.eKriHLfR5Hx6c8TD1RMN-qTu7Z29ThWlPeVq8_dTKLk"
 }
 
-###☻
+###
 DELETE http://localhost:3000/control/id
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1MjI3NWMyOGE5ZDljN2FhNDQ3OWEiLCJpYXQiOjE3MzY4NzMwNjUsImV4cCI6MTczNjg3NjY2NX0.3TaH13kbtoGOeqPTNNhFnU_cekEWZz6Hhtup6notbkc
 Content-Type: application/json
@@ -166,4 +166,67 @@ Content-Type: application/json
     "description": "Event description goes here.",
     "max_subs": 200,
 }
+
+### logout tests
+POST http://localhost:3000/registration
+Content-Type: application/json
+
+{
+    "mail": "newuser@example.com",
+    "userId": "newuser_123",
+    "password": "password123",
+    "name": "New",
+    "dateOfBirth": "1995-01-01T00:00:00.000Z",
+    "surname": "User",
+    "telephone": "5551234567"
+}
+
+###
+POST http://localhost:3000/access
+Content-Type: application/json
+
+{
+    "mail": "newuser@example.com",
+    "password": "password123"
+}
+
+###
+POST http://localhost:3000/eventi/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzkxMTMyM2I0ZWQ2NjU1MTAwODQwY2QiLCJpYXQiOjE3Mzc1NjI2ODMsImV4cCI6MTczNzU2NjI4M30.ZjRfIJ4S76p3_6NMzkVVpZ4hLa-BXluLiGiDxO0vfoU
+
+{
+    "title": "New Event",
+    "date": "2025-02-20T18:00:00Z",
+    "location": "New Location",
+    "price": 50,
+    "target": "General Audience",
+    "category": "Conference",
+    "description": "This is a new event description.",
+    "max_subs": 200
+    
+}
+
+###
+POST http://localhost:3000/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+###
+POST http://localhost:3000/eventi
+Content-Type: application/json
+Authorization: Bearer <YOUR_JWT>
+
+{
+    "title": "Another Event",
+    "date": "2025-03-01T18:00:00Z",
+    "location": "Another Location",
+    "price": 75,
+    "target": "Special Audience",
+    "category": "Workshop",
+    "description": "This event should fail.",
+    "max_subs": 100
+}
+
+
+
 

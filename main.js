@@ -13,7 +13,6 @@ const cron = require('node-cron');
 
 const app = express();
 app.use(express.json());
-app.use(authenticateJWT);
 
 // Connessione al database MongoDB
 const password=process.env.PASSWORD;
@@ -37,6 +36,16 @@ mongoose.connect(uri)
 app.use(cors());
 
 // Importa le route
+const registrationRoute = require('./routes/registration.route');
+app.use('/registration',registrationRoute);
+
+const accessRoute = require('./routes/access.route');
+const { title } = require('process');
+app.use('/access', accessRoute);
+
+app.use(authenticateJWT);
+
+
 const eventRoute = require('./routes/event.route');
 app.use('/eventi', eventRoute);
 
@@ -48,12 +57,11 @@ app.use('/control', controlRoute);
 const partecipationRoute = require('./routes/partecipation.route');
 app.use('/partecipation', partecipationRoute);
 
-const registrationRoute = require('./routes/registration.route');
-app.use('/registration',registrationRoute);
 
-const accessRoute = require('./routes/access.route');
-const { title } = require('process');
-app.use('/access', accessRoute);
+
+// Importa la nuova route per il logout
+const logoutRoute = require('./routes/logout.route');  // Import the logout route
+app.use('/logout', logoutRoute);  // Map it to /logout
 
 const draftRoute = require('./routes/draft.route');
 app.use('/drafts', draftRoute);

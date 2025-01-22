@@ -63,16 +63,18 @@ router.get('/',authenticateJWT, async (req, res) => {
 // Crea un nuovo evento
 router.post('/create',authenticateJWT, (req, res) => {
     console.log("Dati ricevuti per l'evento:", req.body);
+    const organizer = req.user.userId;
     // Istanzia un nuovo evento con i dati ricevuti
     const eventInstance = new Draft({
         title: req.body.title,
         date: req.body.date,
         location: req.body.location,
         price: req.body.price,
+        target: req.body.target,
         category: req.body.category,
         description: req.body.description,
         max_subs: req.body.max_subs,
-
+        organizer:organizer,
     });
 
     // Salva l'evento nel database
