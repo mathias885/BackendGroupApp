@@ -8,9 +8,8 @@ const Organization = require('../modules/organizations.module');
 const mongoose = require('mongoose');
 var ObjectId = require('mongodb').ObjectId;
 
-//non serve auth!!!
 // Ottieni tutti gli eventi con prezzo superiore a 50
-router.get('/filtered',authenticateJWT, async (req, res) => {
+router.get('/filtered', async (req, res) => {
     try {
 
          // Parametri del filtro dal corpo JSON
@@ -36,7 +35,6 @@ router.get('/filtered',authenticateJWT, async (req, res) => {
 });
 
 
-//non serve auth!!!
 // Ottieni i primi x eventi non filtrati
 router.get('/unfiltered', async (req, res) => {
     try {
@@ -90,9 +88,8 @@ router.post('/create',authenticateJWT, (req, res) => {
         });
 });
 
-//non serve auth!!!
 //restituisce il numero di partecipanti ad un dato evento
-router.get('/partecipants',authenticateJWT, async (req, res) => {
+router.get('/partecipants', async (req, res) => {
     try {
         //parametri del filtro
         const event_id = new mongoose.Types.ObjectId(req.query.id);
@@ -108,9 +105,8 @@ router.get('/partecipants',authenticateJWT, async (req, res) => {
     }
 });
 
-//non serve auth!!!
 // Ottieni evento per ID
-router.get('/id',authenticateJWT,async (req, res) => {
+router.get('/id',async (req, res) => {
     try {
         const event_id = new mongoose.Types.ObjectId(req.query.id);
         const event = await Event.findById(event_id);
