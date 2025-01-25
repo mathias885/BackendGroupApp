@@ -61,9 +61,10 @@ router.get('/',authenticateJWT, async (req, res) => {
 });
 
 
-// Crea un nuovo evento (draft)  |||| posso predndere user dall'autantication???
-router.post('/',authenticateJWT ,(req, res) => {
-    console.log("Dati ricevuti per l'evento:", req.user.userId);
+// Crea un nuovo evento
+router.post('/create',authenticateJWT, (req, res) => {
+    console.log("Dati ricevuti per l'evento:", req.body);
+    const organizer = req.user.userId;
     // Istanzia un nuovo evento con i dati ricevuti
     const eventInstance = new Draft({
         title: req.body.title,
@@ -74,7 +75,7 @@ router.post('/',authenticateJWT ,(req, res) => {
         category: req.body.category,
         description: req.body.description,
         max_subs: req.body.max_subs,
-        organizer: req.user.userId // id da auth???
+        organizer:organizer,
     });
 
     // Salva l'evento nel database

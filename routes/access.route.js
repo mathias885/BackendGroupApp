@@ -59,10 +59,5 @@ router.post('/token_access', authenticateJWT, async (req, res) => {
 });
 
 
-// Logout Route
-router.post('/logout', (req, res) => {
-
-    res.json({ message: 'Logged out successfully' });
-});
 
 module.exports = router;
