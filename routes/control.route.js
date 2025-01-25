@@ -4,6 +4,7 @@ const Draft = require('../modules/event_draft.module');
 const Event = require('../modules/event.module');
 const User = require('../modules/user.module');
 const Organization = require('../modules/organizations.module');
+const Partecipation = require('../modules/partecipation.module');
 const mongoose = require('mongoose');
 const authenticateJWT = require('../middlewares/authenticateJWT');
 var ObjectId = require('mongodb').ObjectId;
@@ -38,7 +39,7 @@ router.get('/drafts',authenticateJWT,async (req, res) => {
 
 
 //approva un dato evento con id
-router.post('/:id',authenticateJWT,async (req, res) => {
+router.post('/approve',authenticateJWT,async (req, res) => {
     
     try {
         //controlla che l'user id appartenga ad un admin
@@ -87,7 +88,7 @@ router.post('/:id',authenticateJWT,async (req, res) => {
 
 
 //elimina una draft con id
-router.delete('/:id',authenticateJWT,async (req, res) => {
+router.delete('/draft',authenticateJWT,async (req, res) => {
     try {
 
         //controlla che l'user id appartenga ad un admin
@@ -108,7 +109,7 @@ router.delete('/:id',authenticateJWT,async (req, res) => {
 });
 
 //elimina un evento con id
-router.delete('/:id',authenticateJWT,async (req, res) => {
+router.delete('/event',authenticateJWT,async (req, res) => {
     try {
 
         //controlla che l'user id appartenga ad un admin
@@ -122,6 +123,11 @@ router.delete('/:id',authenticateJWT,async (req, res) => {
             return res.status(405).json({ message: 'Evento non trovato' });
         }
         
+        const result = await Partecipation.deleteMany({ "eventID":id });
+        if (!result) {
+            return res.status(405).json({ message: 'nessuna parteciapzione trovata' });
+        }
+
         res.json({ message: 'Evento eliminato con successo', deletedEvent });
     } catch (err) {
         res.status(500).json({ message: 'Errore del server', error: err.message });

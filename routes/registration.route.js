@@ -30,17 +30,6 @@ router.post('/', async (req, res) => {
         }
 
 
-        // Controlla se l'userId usato è già presente nel database
-/*         const existingUserby_id = await User.findOne({ userId });
-        if (existingUserby_id) {
-            return res.status(409).json({
-                 error: {
-                    status: 409,
-                    message: 'Esiste già un utente registrato con questo id'
-                    }
-                });
-        }
- */
         // Hash the password before saving it
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 

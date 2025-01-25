@@ -10,7 +10,7 @@ function authenticateJWT(req, res, next) {
     const authHeader = req.headers.authorization;
 
     // List of exempted routes
-    const exemptedRoutes = ['/registration', '/access'];
+    const exemptedRoutes = ['/registration', '/access', '/event/unfiltered'];
 
     // Check if the current route is exempted
     if (exemptedRoutes.some(route => req.path.startsWith(route))) {

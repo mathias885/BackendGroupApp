@@ -1,7 +1,3 @@
-GET http://localhost:3000/eventi
-
-###
-
 
 POST http://localhost:3000/eventi
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3Mzc0NTUwOTAsImV4cCI6MTczNzQ1ODY5MH0.jUjGYn7bXvtRFnOBtNOTxWChZXPxgakBQdQ-09hnF8M
@@ -18,22 +14,15 @@ Content-Type: application/json
         "description": "non so.",
         "max_subs": "300"
 }
-###
-
-GET http://localhost:3000/eventi/id
-
-###
-
-DELETE  http://localhost:3000/eventi/id
 
 ###
 
 POST http://localhost:3000/partecipation
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzg1MjI3NWMyOGE5ZDljN2FhNDQ3OWEiLCJpYXQiOjE3MzczNzQ2NzksImV4cCI6MTczNzM3ODI3OX0.OFd11KytKZI8HVwvoLBAkKCY3KSE-4YYiKCbKlu5zkg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjEzMGFmOTJmYzQ5NzU2Nzg3MjgiLCJpYXQiOjE3Mzc4MTY4MzUsImV4cCI6MTczNzgyMDQzNX0.tKHCxOU5czPFwkk7L5fBJcfsD99QPTVoG_uNPPvF-fU
 Content-Type: application/json
 
-{"user": "676d6a9da7ca56cf8a048481",
-  "event": "676d316e243039a057ef6e37"
+{"user": "678f6130af92fc4975678728",
+  "event": "678f6f61c267f9f09e0dc653"
 }
 
 ###
@@ -41,7 +30,7 @@ POST http://localhost:3000/registration
 Content-Type: application/json
 
 {
-        "mail": "admin@example.com",
+        "mail": "utente@example.com",
         "password": "admin",
         "name": "admin",
         "dateOfBirth": "1300-11-30T00:00:00.000Z",
@@ -108,5 +97,18 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3000/eventi/yourEvents?start=0
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3Mzc0NTUwOTAsImV4cCI6MTczNzQ1ODY5MH0.jUjGYn7bXvtRFnOBtNOTxWChZXPxgakBQdQ-09hnF8M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjEzMGFmOTJmYzQ5NzU2Nzg3MjgiLCJpYXQiOjE3Mzc4MTY4MzUsImV4cCI6MTczNzgyMDQzNX0.tKHCxOU5czPFwkk7L5fBJcfsD99QPTVoG_uNPPvF-fU
+Content-Type: application/json
+
+###
+POST http://localhost:3000/control/approve
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3Mzc4MTc4NDgsImV4cCI6MTczNzgyMTQ0OH0.o42h4HD2QHKCmDsPP2iN_hK4KTlVmZ2zzQAghzZCnMQ
+Content-Type: application/json
+
+{
+  "id":"679120510577256868dc9cd5"
+}
+
+###
+GET http://localhost:3000/eventi/unfiltered?start=0
 Content-Type: application/json

@@ -1,18 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const partecipation = require('../modules/partecipation.module');
+const authenticateJWT = require('../middlewares/authenticateJWT');
 
 
 
 // Crea una nuova partecipazione
-router.post('/', (req, res) => {
-    console.log("Dati ricevuti per l'evento:", req.body);
-
+router.post('/',authenticateJWT, (req, res) => {
+try{
     // Istanzia una nuova partecipazione con i dati ricevuti
     const eventInstance = new partecipation({
 
         //cast a object id?????
-        userID: req.body.user,
+        userID: req.user.userId,
         eventID: req.body.event,
         
     });
@@ -27,6 +27,11 @@ router.post('/', (req, res) => {
             console.error("Errore durante il salvataggio della partecipazione:", err);
             res.status(500).send("Errore durante il salvataggio della partecipazione");
         });
+    }catch (err) {
+        console.error("Errore durante la partecipazione:", err);
+        res.status(500).send("Errore durante la partecipazione");
+    }
+
 });
 
 
@@ -35,7 +40,7 @@ router.post('/', (req, res) => {
 //ha senso??? serve??? o da fare solo quando viene eliminato un evento, incorporare in event delete????
 
 // Elimina tutte le partecipazioni con l'ID dell'evento
-router.delete('/event', async (req, res) => {
+/* router.delete('/event', async (req, res) => {
     try {
         eventID = req.query.eventID;
                 
@@ -51,13 +56,13 @@ router.delete('/event', async (req, res) => {
         res.status(500).send("Errore durante l'eliminazione delle partecipazioni");
     }
 });
-
+ */
 
 //user da auth???
 // Elimina una partecipazione specifica dato userID ed eventID
-router.delete('/:single', async (req, res) => {
+router.delete('/:single',authenticateJWT, async (req, res) => {
     try {
-        userID = req.body.user;
+        userID = req.user.userId;
         eventID = req.body.event;
 
         // Elimina la partecipazione specifica

@@ -38,7 +38,7 @@ router.get('/filtered',authenticateJWT, async (req, res) => {
 
 //non serve auth!!!
 // Ottieni i primi x eventi non filtrati
-router.get('/',authenticateJWT, async (req, res) => {
+router.get('/unfiltered', async (req, res) => {
     try {
       
         // Legge il parametro `start` dalla query string e lo converte in un numero
@@ -125,7 +125,7 @@ router.get('/id',authenticateJWT,async (req, res) => {
 
 
 
-// Elimina evento per ID ||| user da autentication???
+// Elimina evento per ID
 router.delete('/event', authenticateJWT, async (req, res) => {
     try {
         const eventId = new mongoose.Types.ObjectId(req.query.id);
@@ -139,13 +139,16 @@ router.delete('/event', authenticateJWT, async (req, res) => {
         }
 
         // Verifica che l'utente sia il creatore dell'evento 
-        const organizer = await Organizes.findOne({ eventId, userId });
+        const organizer = await Organization.findOne({ eventId, userId });
         if (!organizer) {
             return res.status(403).json({ message: 'Non hai i permessi per eliminare questo evento' });
         }
 
         // Elimina l'evento
         await event.remove();
+
+        //elimina le partecipazioni legate all'evento
+        const result = await partecipation.deleteMany({ eventId });
 
         res.json({ message: 'Evento eliminato con successo' });
     } catch (err) {
