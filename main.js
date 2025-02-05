@@ -14,6 +14,8 @@ const cron = require('node-cron');
 const app = express();
 app.use(express.json());
 
+
+
 // Connessione al database MongoDB
 const password=process.env.PASSWORD;
 const user=process.env.USER;
@@ -34,6 +36,22 @@ mongoose.connect(uri)
 
 
 app.use(cors());
+
+//TEMPORANEO SOLO PER TESTING
+
+// Endpoint per eliminare eventi vecchi manualmente
+router.delete('/delete-old-events', async (req, res) => {
+    try {
+        await deleteOldEvents();
+        res.send("Eventi vecchi eliminati con successo");
+    } catch (error) {
+        console.error("Errore durante l'eliminazione degli eventi:", error.message);
+        res.status(500).send("Errore durante l'eliminazione degli eventi");
+    }
+});
+
+
+
 
 // Importa le route
 const registrationRoute = require('./routes/registration.route');

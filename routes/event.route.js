@@ -13,7 +13,7 @@ router.get('/filtered', async (req, res) => {
     try {
 
          // Parametri del filtro dal corpo JSON
-         const { start = 0, price, date, category, target } = req.body;
+         const { start = 0, price, date, category, target } = req.query;
 
          // Costruzione dinamica dei filtri
          const filters = {};
@@ -21,6 +21,14 @@ router.get('/filtered', async (req, res) => {
          if (date) filters.date = { $gt: date };
          if (category) filters.category = category;
          if (target) filters.target = target;
+
+         // Filtro per titolo (se presente) funziona???
+        if (title) {
+            const keywords = title.split(" ").filter(word => word.length > 0); // Divide la stringa in parole
+            const regex = new RegExp(keywords.join("|"), "i"); // Crea una regex che cerca almeno una parola nel titolo
+            filters.title = { $regex: regex };
+        }
+
  
          // Recupero eventi con i filtri
          const results = await Event.find(filters).skip(start).limit(100);

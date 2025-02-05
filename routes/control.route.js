@@ -9,32 +9,43 @@ const mongoose = require('mongoose');
 const authenticateJWT = require('../middlewares/authenticateJWT');
 var ObjectId = require('mongodb').ObjectId;
 
-
-
-//mostra le draft
-router.get('/drafts',authenticateJWT,async (req, res) => {
-    
+// Ottieni tutte le drafts filtrate
+router.get('/drafts', async (req, res) => {
     try {
 
         //controlla che l'user id appartenga ad un admin
         const u = await User.findById(req.user.userId);
         if(!u.isAdmin){return res.status(404).json({ message: 'non sei un admin' });}
-
-
-
-        // Legge il parametro `start` dalla query string e lo converte in un numero
-        const start = parseInt(req.query.start, 10) || 0; // Default: 0 se non specificato
-
-
-        // Recupera i 100 eventi a partire dall'indice specificato saltando i primi "start"
-        const results = await Draft.find().skip(start).limit(100);
         
+         // Parametri da query
+         const { start = 0, price, date, category, target } = req.query;
+
+         // Costruzione dinamica dei filtri
+         const filters = {};
+         if (price) filters.price = { $lt: price };
+         if (date) filters.date = { $gt: date };
+         if (category) filters.category = category;
+         if (target) filters.target = target;
+
+         // Filtro per titolo (se presente) funziona???
+        if (title) {
+            const keywords = title.split(" ").filter(word => word.length > 0); // Divide la stringa in parole
+            const regex = new RegExp(keywords.join("|"), "i"); // Crea una regex che cerca almeno una parola nel titolo
+            filters.title = { $regex: regex };
+        }
+
+         // Recupero eventi con i filtri
+         const results = await Draft.find(filters).skip(start).limit(100);
+         
         res.send(results);
 
-    } catch (err) {
-        res.status(500).send("Errore durante il recupero dei drafts");
+    } catch (error) {
+        console.log("Errore durante il recupero degli eventi:", error.message);
+        res.status(500).send("Errore durante il recupero degli eventi");
     }
+    console.log("ricerca filtrata");
 });
+
 
 
 
