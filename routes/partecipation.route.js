@@ -11,7 +11,6 @@ try{
     // Istanzia una nuova partecipazione con i dati ricevuti
     const eventInstance = new partecipation({
 
-        //cast a object id?????
         userID: req.user.userId,
         eventID: req.body.event,
         
@@ -20,15 +19,12 @@ try{
     // Salva la partecipazione nel database
     eventInstance.save()
         .then(result => {
-            console.log("partecipazione salvata con successo:", result);
             res.send("partecipazione creata con successo");
         })
         .catch(err => {
-            console.error("Errore durante il salvataggio della partecipazione:", err);
             res.status(500).send("Errore durante il salvataggio della partecipazione");
         });
     }catch (err) {
-        console.error("Errore durante la partecipazione:", err);
         res.status(500).send("Errore durante la partecipazione");
     }
 
@@ -37,30 +33,9 @@ try{
 
 
 
-//ha senso??? serve??? o da fare solo quando viene eliminato un evento, incorporare in event delete????
 
-// Elimina tutte le partecipazioni con l'ID dell'evento
-/* router.delete('/event', async (req, res) => {
-    try {
-        eventID = req.query.eventID;
-                
-        const result = await partecipation.deleteMany({ eventID });
-
-        if (result.deletedCount === 0) {
-            return res.status(404).send('Nessuna partecipazione trovata per questo evento');
-        }
-
-        res.send(`Eliminate ${result.deletedCount} partecipazioni per l'evento con ID ${eventID}`);
-    } catch (err) {
-        console.error("Errore durante l'eliminazione delle partecipazioni:", err);
-        res.status(500).send("Errore durante l'eliminazione delle partecipazioni");
-    }
-});
- */
-
-//user da auth???
-// Elimina una partecipazione specifica dato userID ed eventID
-router.delete('/:single',authenticateJWT, async (req, res) => {
+// Elimina una partecipazione specifica
+router.delete('/single',authenticateJWT, async (req, res) => {
     try {
         userID = req.user.userId;
         eventID = req.body.event;
@@ -74,7 +49,6 @@ router.delete('/:single',authenticateJWT, async (req, res) => {
 
         res.send(`Partecipazione eliminata`);
     } catch (err) {
-        console.error("Errore durante l'eliminazione della partecipazione:", err);
         res.status(500).send("Errore durante l'eliminazione della partecipazione");
     }
 });

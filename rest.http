@@ -107,5 +107,5 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/eventi/filtered?start=0&target=Bambini
+GET http://localhost:3000/event/filtered?start=0&date="2025-01-01"&title=new
 Content-Type: application/json

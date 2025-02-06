@@ -8,12 +8,12 @@ const Organization = require('../modules/organizations.module');
 const mongoose = require('mongoose');
 var ObjectId = require('mongodb').ObjectId;
 
-// Ottieni tutti gli eventi con prezzo superiore a 50
+// Ottieni eventi filtrati
 router.get('/filtered', async (req, res) => {
     try {
 
-         // Parametri del filtro dal corpo JSON
-         const { start = 0, price, date, category, target } = req.query;
+         // Parametri del filtro da query
+         const { start = 0, price, date, category, target, title } = req.query;
 
          // Costruzione dinamica dei filtri
          const filters = {};
@@ -22,7 +22,7 @@ router.get('/filtered', async (req, res) => {
          if (category) filters.category = category;
          if (target) filters.target = target;
 
-         // Filtro per titolo (se presente) funziona???
+         // Filtro per titolo (se presente)
         if (title) {
             const keywords = title.split(" ").filter(word => word.length > 0); // Divide la stringa in parole
             const regex = new RegExp(keywords.join("|"), "i"); // Crea una regex che cerca almeno una parola nel titolo
@@ -36,41 +36,17 @@ router.get('/filtered', async (req, res) => {
         res.send(results);
 
     } catch (error) {
-        console.log("Errore durante il recupero degli eventi:", error.message);
         res.status(500).send("Errore durante il recupero degli eventi");
     }
-    console.log("ricerca filtrata");
 });
 
-
-// Ottieni i primi x eventi non filtrati
-router.get('/unfiltered', async (req, res) => {
-    try {
-      
-        // Legge il parametro `start` dalla query string e lo converte in un numero
-        const start = parseInt(req.query.start, 10) || 0; // Default: 0 se non specificato
-
-        //data odierna
-        const data = new Date();
-
-        // Recupera i 100 eventi a partire dall'indice specificato
-        const results = await Event.find({date: { $gt: data }  // Filtro per eventi dopo di una certa data
-        }).skip(start).limit(100);
-        
-        res.send(results);
-
-    } catch (error) {
-        console.log("Errore durante il recupero degli eventi:", error.message);
-        res.status(500).send("Errore durante il recupero degli eventi");
-    }
-    console.log("ricerca filtrata");
-});
 
 
 // Crea un nuovo evento
 router.post('/create',authenticateJWT, (req, res) => {
     console.log("Dati ricevuti per l'evento:", req.body);
-    const organizer = req.user.userId;
+    const organizer = req.user.userId; 
+
     // Istanzia un nuovo evento con i dati ricevuti
     const eventInstance = new Draft({
         title: req.body.title,
@@ -87,11 +63,9 @@ router.post('/create',authenticateJWT, (req, res) => {
     // Salva l'evento nel database
     eventInstance.save()
         .then(result => {
-            console.log("Evento salvato con successo:", result);
             res.send("Evento creato con successo");
         })
         .catch(err => {
-            console.error("Errore durante il salvataggio dell'evento:", err);
             res.status(500).send("Errore durante il salvataggio dell'evento");
         });
 });
@@ -99,6 +73,7 @@ router.post('/create',authenticateJWT, (req, res) => {
 //restituisce il numero di partecipanti ad un dato evento
 router.get('/partecipants', async (req, res) => {
     try {
+
         //parametri del filtro
         const event_id = new mongoose.Types.ObjectId(req.query.id);
         
@@ -108,7 +83,6 @@ router.get('/partecipants', async (req, res) => {
         res.send(participantsCount);
 
     } catch (error) {
-        console.log("Errore durante il recupero degli eventi:", error.message);
         res.status(500).send("Errore durante il recupero degli eventi");
     }
 });
@@ -133,7 +107,7 @@ router.get('/id',async (req, res) => {
 router.delete('/event', authenticateJWT, async (req, res) => {
     try {
         const eventId = new mongoose.Types.ObjectId(req.query.id);
-        const userId=req.user.userId; // user da autentication????
+        const userId=req.user.userId; 
 
         // Ottieni l'evento tramite ID
         const event = await Event.findById(eventId);

@@ -40,7 +40,7 @@ app.use(cors());
 //TEMPORANEO SOLO PER TESTING
 
 // Endpoint per eliminare eventi vecchi manualmente
-router.delete('/delete-old-events', async (req, res) => {
+app.delete('/delete-old-events', async (req, res) => {
     try {
         await deleteOldEvents();
         res.send("Eventi vecchi eliminati con successo");
@@ -65,7 +65,7 @@ app.use(authenticateJWT);
 
 
 const eventRoute = require('./routes/event.route');
-app.use('/eventi', eventRoute);
+app.use('/event', eventRoute);
 
 // Importa la route per il controllo
 const controlRoute = require('./routes/control.route');

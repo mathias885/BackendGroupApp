@@ -9,16 +9,16 @@ const mongoose = require('mongoose');
 const authenticateJWT = require('../middlewares/authenticateJWT');
 var ObjectId = require('mongodb').ObjectId;
 
-// Ottieni tutte le drafts filtrate
+// Ottieni drafts filtrate
 router.get('/drafts', async (req, res) => {
     try {
 
         //controlla che l'user id appartenga ad un admin
         const u = await User.findById(req.user.userId);
-        if(!u.isAdmin){return res.status(404).json({ message: 'non sei un admin' });}
+        if(!u.isAdmin){return res.status(401).json({ message: 'non sei un admin' });}
         
          // Parametri da query
-         const { start = 0, price, date, category, target } = req.query;
+         const { start = 0, price, date, category, target, title } = req.query;
 
          // Costruzione dinamica dei filtri
          const filters = {};
@@ -27,23 +27,21 @@ router.get('/drafts', async (req, res) => {
          if (category) filters.category = category;
          if (target) filters.target = target;
 
-         // Filtro per titolo (se presente) funziona???
+         // Filtro per titolo
         if (title) {
             const keywords = title.split(" ").filter(word => word.length > 0); // Divide la stringa in parole
             const regex = new RegExp(keywords.join("|"), "i"); // Crea una regex che cerca almeno una parola nel titolo
             filters.title = { $regex: regex };
         }
 
-         // Recupero eventi con i filtri
+         // Recupero draft con i filtri
          const results = await Draft.find(filters).skip(start).limit(100);
          
         res.send(results);
 
     } catch (error) {
-        console.log("Errore durante il recupero degli eventi:", error.message);
         res.status(500).send("Errore durante il recupero degli eventi");
     }
-    console.log("ricerca filtrata");
 });
 
 
@@ -53,9 +51,10 @@ router.get('/drafts', async (req, res) => {
 router.post('/approve',authenticateJWT,async (req, res) => {
     
     try {
+
         //controlla che l'user id appartenga ad un admin
         const u = await User.findById(req.user.userId);
-        if(!u.isAdmin){return res.status(404).json({ message: 'non sei un admin' });}
+        if(!u.isAdmin){return res.status(401).json({ message: 'non sei un admin' });}
 
         const id=new ObjectId(req.body.id);
         const draft = await Draft.findById(id);
@@ -91,26 +90,26 @@ router.post('/approve',authenticateJWT,async (req, res) => {
         await Draft.findByIdAndDelete(id);
 
 
-        res.json(draft);// serve??
+        res.json(draft);
     } catch (err) {
         res.status(500).send("Errore durante il recupero dei drafts");
     }
 });
 
 
-//elimina una draft con id
+//elimina una draft con id da query
 router.delete('/draft',authenticateJWT,async (req, res) => {
     try {
 
         //controlla che l'user id appartenga ad un admin
         const u = await User.findById(req.user.userId);
-        if(!u.isAdmin){return res.status(403).json({ message: 'non sei un admin' });}
+        if(!u.isAdmin){return res.status(401).json({ message: 'non sei un admin' });}
 
         const id=new ObjectId(req.query.id);
         const deletedEvent = await Draft.findByIdAndDelete(id);
 
         if (!deletedEvent) {
-            return res.status(405).json({ message: 'Draft non trovata' });
+            return res.status(404).json({ message: 'Draft non trovata' });
         }
         
         res.json({ message: 'Draft eliminata con successo', deletedEvent });
@@ -125,18 +124,18 @@ router.delete('/event',authenticateJWT,async (req, res) => {
 
         //controlla che l'user id appartenga ad un admin
         const u = await User.findById(req.user.userId);
-        if(!u.isAdmin){return res.status(403).json({ message: 'non sei un admin' });}
+        if(!u.isAdmin){return res.status(401).json({ message: 'non sei un admin' });}
 
         const id=new ObjectId(req.query.id);
         const deletedEvent = await Event.findByIdAndDelete(id);
 
         if (!deletedEvent) {
-            return res.status(405).json({ message: 'Evento non trovato' });
+            return res.status(404).json({ message: 'Evento non trovato' });
         }
         
         const result = await Partecipation.deleteMany({ "eventID":id });
         if (!result) {
-            return res.status(405).json({ message: 'nessuna parteciapzione trovata' });
+            return res.status(404).json({ message: 'nessuna parteciapzione trovata' });
         }
 
         res.json({ message: 'Evento eliminato con successo', deletedEvent });
