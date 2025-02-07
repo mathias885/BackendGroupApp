@@ -193,9 +193,16 @@ app.post('/registration', async (req, res) => {
     res.send("Utente creato");
 });
 
+// per deploy
+const PORT = process.env.PORT || 3000;
 
-// Avvio del server
-app.listen(3000, () => {
-    console.log("Server avviato su porta 3000");
-});
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+  
+
+// Avvio del server in locale
+//app.listen(3000, () => {
+ //   console.log("Server avviato su porta 3000");
+//});
  
