@@ -4,7 +4,7 @@
   "description": "API deployed on Render",
   "main": "main.js",
   "scripts": {
-    "start": "node test.js",
+    "start": "node main.js",
     "build": "echo 'No build step'",
     "prestart": "npm install"
   },
