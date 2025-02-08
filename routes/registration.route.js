@@ -8,12 +8,12 @@ const SALT_ROUNDS = 10;
 // Route to handle user registration
 router.post('/', async (req, res) => {
     
-    const { mail, userId, password, name, dateOfBirth, surname, telephone } = req.body;
+    const { mail, password, name, dateOfBirth, surname, telephone } = req.body;
 
     console.log('Dati ricevuti:', req.body);  // Verifica cosa ricevi
     
     // Validate required fields
-    if (!mail || !userId || !password || !name || !dateOfBirth || !surname || !telephone) {
+    if (!mail || !password || !name || !dateOfBirth || !surname || !telephone) {
         return res.status(400).json({ error: 'Tutti i campi devono essere compilati' });
     }
 
@@ -30,17 +30,6 @@ router.post('/', async (req, res) => {
         }
 
 
-        // Controlla se l'userId usato è già presente nel database
-        const existingUserby_id = await User.findOne({ userId });
-        if (existingUserby_id) {
-            return res.status(409).json({
-                 error: {
-                    status: 409,
-                    message: 'Esiste già un utente registrato con questo id'
-                    }
-                });
-        }
-
         // Hash the password before saving it
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
@@ -48,7 +37,6 @@ router.post('/', async (req, res) => {
         // Crea un nuovo User
         const newUser = new User({
             mail,
-            userId,
             password: hashedPassword,
             name,
             dateOfBirth,

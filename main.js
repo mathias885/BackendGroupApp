@@ -13,11 +13,12 @@ const cron = require('node-cron');
 
 const app = express();
 app.use(express.json());
-app.use(authenticateJWT);
+
+
 
 // Connessione al database MongoDB
 const password=process.env.PASSWORD;
-const user=process.env.USERNAME;
+const user=process.env.USER;
 console.log(password);
 console.log(user);
 
@@ -36,9 +37,35 @@ mongoose.connect(uri)
 
 app.use(cors());
 
+//TEMPORANEO SOLO PER TESTING
+
+// Endpoint per eliminare eventi vecchi manualmente
+app.delete('/delete-old-events', async (req, res) => {
+    try {
+        await deleteOldEvents();
+        res.send("Eventi vecchi eliminati con successo");
+    } catch (error) {
+        console.error("Errore durante l'eliminazione degli eventi:", error.message);
+        res.status(500).send("Errore durante l'eliminazione degli eventi");
+    }
+});
+
+
+
+
 // Importa le route
+const registrationRoute = require('./routes/registration.route');
+app.use('/registration',registrationRoute);
+
+const accessRoute = require('./routes/access.route');
+const { title } = require('process');
+app.use('/access', accessRoute);
+
+app.use(authenticateJWT);
+
+
 const eventRoute = require('./routes/event.route');
-app.use('/eventi', eventRoute);
+app.use('/event', eventRoute);
 
 // Importa la route per il controllo
 const controlRoute = require('./routes/control.route');
@@ -48,15 +75,12 @@ app.use('/control', controlRoute);
 const partecipationRoute = require('./routes/partecipation.route');
 app.use('/partecipation', partecipationRoute);
 
-const registrationRoute = require('./routes/registration.route');
-app.use('/registration',registrationRoute);
 
-const accessRoute = require('./routes/access.route');
-const { title } = require('process');
-app.use('/access', accessRoute);
 
-const draftRoute = require('./routes/draft.route');
-app.use('/drafts', draftRoute);
+// Importa la nuova route per il logout
+const logoutRoute = require('./routes/logout.route');  // Import the logout route
+app.use('/logout', logoutRoute);  // Map it to /logout
+
 
 
 // Middleware per gestire errori 404
@@ -76,41 +100,55 @@ app.use((err, req, res, next) => {
     });
 });
 
-//elimina gli eventi vecchi
+//elimina gli eventi vecchi, funziona????
 async function deleteOldEvents() {
     try {
         const today = new Date();
         today.setHours(0, 0, 0, 0); // Imposta l'orario di oggi alle 00:00
         const oldEvents = await Event.find({ date: { $lt: today } });
 
+        if (oldEvents.length > 0) {
 
-        if(oldEvents>0){
+            // Proviamo a creare i record prima di eliminare gli eventi
+            for (const event of oldEvents) {
+                try {
+                    // Creazione dei record per ogni evento
+                    const record = new Record({
+                        title: event.title,
+                        date: event.date,
+                        location: event.location,
+                        price: event.price,
+                        target: event.target,
+                        category: event.category,
+                        description: event.description,
+                        max_subs: event.max_subs,
+                        subs: await partecipants(event._id), // Assicurati che questa funzione ritorni i dati correttamente
+                        orgnizer: await organizer(event._id)  // Assicurati che questa funzione ritorni i dati correttamente
+                    });
 
-            const Record =[];
+                    record.save(); // Aggiungi il record all'array
 
-            for(const event of oldEvents){
-
-                Record.push({
-                    title: event.title,
-                    date: event.date,
-                    location: event.location,
-                    price: event.price,
-                    category: event.category,
-                    description: event.description,
-                    max_subs: event.max_subs,
-                    subs: await partecipants(event._id),
-                    orgnizer: await organizer(event._id)
-                })
+                } catch (err) {
+                    // Se si verifica un errore durante la creazione del record, restituisci un errore
+                    throw new Error(`Errore durante la creazione del record per l'evento con ID ${event._id}: ${err.message}`);
+                }
             }
+
+            // Se arriviamo qui, significa che tutti i record sono stati creati correttamente
+            // Ora possiamo procedere con l'eliminazione degli eventi
+            const result = await Event.deleteMany({ date: { $lt: today } });
+            console.log(`Eventi eliminati: ${result.deletedCount}`);
+            
+            // Qui puoi aggiungere il salvataggio dei record se necessario
+            // ad esempio, salvarli in una collezione separata o inviarli a un sistema di archiviazione
+            // await saveRecords(Record);
+
+        } else {
+            console.log("Nessun evento da eliminare.");
         }
-
-        const result = await Event.deleteMany({ date: { $lt: today } });
-
     } catch (error) {
         console.error("Errore durante l'eliminazione degli eventi:", error.message);
     }
-
-
 }
 
 
@@ -123,15 +161,15 @@ cron.schedule('0 0 * * *', () => {
 //ritorna il numero di parteciapnti all evento
 async function partecipants(id){
 
-    const participantsCount = await Partecipation.countDocuments({ event_id });
+    const participantsCount = await Partecipation.countDocuments({ eventID:id });
     
-    return partecipationCount
+    return participantsCount;
 }
 
 //ritorna l id dell organizzatore di un evento
 async function organizer(id){
 
-    const organizationRecord = await Organization.findOne({ eventID: eventId });
+    const organizationRecord = await Organization.findOne({ eventID: id });
 
     return organizationRecord.userID;
 }
@@ -155,16 +193,6 @@ app.post('/registration', async (req, res) => {
     res.send("Utente creato");
 });
 
-/*
-app.post('/eventi', (req, res) => {
-    // Endpoint per la creazione di un nuovo evento
-    res.send("Evento creato");
-});*/
-
-app.delete('/eventi', (req, res) => {
-    // Endpoint per la cancellazione di un evento
-    res.send("Evento eliminato");
-});
 
 // Avvio del server
 app.listen(3000, () => {

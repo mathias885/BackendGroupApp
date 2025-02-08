@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const partecipation = require('../modules/partecipation.module');
+const authenticateJWT = require('../middlewares/authenticateJWT');
 
 
-//assicurarsi che l id utente sia il proprio
 
 // Crea una nuova partecipazione
-router.post('/', (req, res) => {
-    console.log("Dati ricevuti per l'evento:", req.body);
-
+router.post('/',authenticateJWT, (req, res) => {
+try{
     // Istanzia una nuova partecipazione con i dati ricevuti
     const eventInstance = new partecipation({
-        userID: req.body.user,
+
+        userID: req.user.userId,
         eventID: req.body.event,
         
     });
@@ -19,43 +19,25 @@ router.post('/', (req, res) => {
     // Salva la partecipazione nel database
     eventInstance.save()
         .then(result => {
-            console.log("partecipazione salvata con successo:", result);
             res.send("partecipazione creata con successo");
         })
         .catch(err => {
-            console.error("Errore durante il salvataggio della partecipazione:", err);
             res.status(500).send("Errore durante il salvataggio della partecipazione");
         });
-});
-
-
-
-// Elimina tutte le partecipazioni con l'ID dell'evento
-
-router.delete('/event', async (req, res) => {
-    try {
-        eventID = req.query.eventID;
-        console.log(eventID);
-        
-        const result = await partecipation.deleteMany({ eventID });
-
-        if (result.deletedCount === 0) {
-            return res.status(404).send('Nessuna partecipazione trovata per questo evento');
-        }
-
-        res.send(`Eliminate ${result.deletedCount} partecipazioni per l'evento con ID ${eventID}`);
-    } catch (err) {
-        console.error("Errore durante l'eliminazione delle partecipazioni:", err);
-        res.status(500).send("Errore durante l'eliminazione delle partecipazioni");
+    }catch (err) {
+        res.status(500).send("Errore durante la partecipazione");
     }
+
 });
 
 
 
-// Elimina una partecipazione specifica dato userID ed eventID
-router.delete('/:single', async (req, res) => {
+
+
+// Elimina una partecipazione specifica
+router.delete('/single',authenticateJWT, async (req, res) => {
     try {
-        userID = req.body.user;
+        userID = req.user.userId;
         eventID = req.body.event;
 
         // Elimina la partecipazione specifica
@@ -67,7 +49,6 @@ router.delete('/:single', async (req, res) => {
 
         res.send(`Partecipazione eliminata`);
     } catch (err) {
-        console.error("Errore durante l'eliminazione della partecipazione:", err);
         res.status(500).send("Errore durante l'eliminazione della partecipazione");
     }
 });
