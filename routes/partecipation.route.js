@@ -40,22 +40,26 @@ router.post('/join', authenticateJWT, async (req, res) => {
 
 
 
-// Elimina una partecipazione specifica
-router.delete('/leave',authenticateJWT, async (req, res) => {
+router.delete('/leave', authenticateJWT, async (req, res) => {
     try {
-        userID = req.user.userId;
-        eventID = req.query.event;
+        const userID = req.user.userId;
+        const eventID = req.query.event;
 
-        // Elimina la partecipazione specifica
-        const result = await partecipation.deleteOne({ userID, eventID });
-
-        if (result.deletedCount === 0) {
-            return res.status(404).send('Partecipazione non trovata');
+        if (!eventID) {
+            return res.status(400).send("ID evento mancante.");
         }
 
-        res.send(`Partecipazione eliminata`);
+        // Elimina la partecipazione specifica
+        const result = await Participation.deleteOne({ userID, eventID });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).send("Partecipazione non trovata.");
+        }
+
+        res.send("Partecipazione eliminata con successo.");
     } catch (err) {
-        res.status(500).send("Errore durante l'eliminazione della partecipazione");
+        console.error("Errore durante l'eliminazione della partecipazione:", err);
+        res.status(500).send("Errore interno del server.");
     }
 });
 
