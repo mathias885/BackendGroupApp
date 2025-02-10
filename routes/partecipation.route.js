@@ -5,40 +5,34 @@ const authenticateJWT = require('../middlewares/authenticateJWT');
 
 
 
-router.post('/join', authenticateJWT, (req, res) => {
+router.post('/join', authenticateJWT, async (req, res) => {
     try {
         const userId = req.user.userId;
         const eventId = req.query.event;
 
+        if (!eventId) {
+            return res.status(400).send("ID evento mancante.");
+        }
+
         // Verifica se l'utente è già iscritto all'evento
-        partecipation.findOne({ userID: userId, eventID: eventId })
-            .then(existingParticipation => {
-                if (existingParticipation) {
-                    // L'utente è già iscritto all'evento
-                    return res.status(400).send("L'utente è già iscritto a questo evento.");
-                } 
+        const existingParticipation = await Participation.findOne({ userID: userId, eventID: eventId });
 
-                // Istanzia una nuova partecipazione se non esiste già
-                const eventInstance = new partecipation({
-                    userID: userId,
-                    eventID: eventId,
-                });
+        if (existingParticipation) {
+            return res.status(400).send("L'utente è già iscritto a questo evento.");
+        }
 
-                // Salva la partecipazione nel database
-                eventInstance.save()
-                    .then(result => {
-                        res.send("Partecipazione creata con successo.");
-                    })
-                    .catch(err => {
-                        res.status(500).send("Errore durante il salvataggio della partecipazione.");
-                    });
-            })
-            .catch(err => {
-                res.status(500).send("Errore durante la verifica della partecipazione.");
-            });
+        // Creazione della partecipazione
+        const eventInstance = new Participation({
+            userID: userId,
+            eventID: eventId,
+        });
+
+        await eventInstance.save();
+        res.send("Partecipazione creata con successo.");
 
     } catch (err) {
-        res.status(500).send("Errore durante la partecipazione.");
+        console.error("Errore durante la partecipazione:", err);
+        res.status(500).send("Errore interno del server.");
     }
 });
 

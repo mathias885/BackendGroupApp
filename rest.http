@@ -1,6 +1,6 @@
 
 POST http://localhost:3000/event/create
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjEzMGFmOTJmYzQ5NzU2Nzg3MjgiLCJpYXQiOjE3MzkxOTIzMzIsImV4cCI6MTczOTE5NTkzMn0.uhyNizWfq-GFGf-bkxvc0f9x1MURxwuSGuAib9xsAu0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3MzkyMDk3ODYsImV4cCI6MTczOTIxMzM4Nn0.nxF4bjd01cGZyYDPQ-_2Bn_CSuLpTf2FJRZlGKgpIcU
 Content-Type: application/json
 
 
@@ -13,16 +13,6 @@ Content-Type: application/json
         "category": "Sport",
         "description": "non so.",
         "max_subs": 300
-}
-
-###
-
-POST http://localhost:3000/partecipation
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjEzMGFmOTJmYzQ5NzU2Nzg3MjgiLCJpYXQiOjE3Mzc4MTY4MzUsImV4cCI6MTczNzgyMDQzNX0.tKHCxOU5czPFwkk7L5fBJcfsD99QPTVoG_uNPPvF-fU
-Content-Type: application/json
-
-{"user": "678f6130af92fc4975678728",
-  "event": "678f6f61c267f9f09e0dc653"
 }
 
 ###
@@ -97,8 +87,8 @@ GET http://localhost:3000/event/yourDrafts?start=0
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3MzkxOTM3NjIsImV4cCI6MTczOTE5NzM2Mn0.6UtT_4Sqjq238TKr31ztAOnTCLOD79YIjCdP8sJ6WnA
 
 ###
-POST http://localhost:3000/partecipation/join?event=67a8bf73194487f3f523cc90
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3MzkxOTI5OTEsImV4cCI6MTczOTE5NjU5MX0.owW7I1v-ObbOcD3IHgZ-XckKd6uo3eifVquUepZT--E
+POST http://localhost:3000/partecipation/join?event=67a8c542194487f3f523cd28
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3MzkyMDk3ODYsImV4cCI6MTczOTIxMzM4Nn0.nxF4bjd01cGZyYDPQ-_2Bn_CSuLpTf2FJRZlGKgpIcU
 Content-Type: application/json
 
 
