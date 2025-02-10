@@ -104,7 +104,7 @@ router.get('/id',async (req, res) => {
 
 
 // Elimina evento per ID
-router.delete('/event', authenticateJWT, async (req, res) => {
+router.delete('/delete_event', authenticateJWT, async (req, res) => {
     try {
         const eventId = new mongoose.Types.ObjectId(req.query.id);
         const userId=req.user.userId; 
@@ -139,7 +139,7 @@ router.delete('/event', authenticateJWT, async (req, res) => {
 //cambiare url
 
 // Elimina draft per id preso da query
-router.delete('/draft',authenticateJWT, async (req, res) => {
+router.delete('/delete_draft',authenticateJWT, async (req, res) => {
     try {
         // Ottieni l'evento tramite ID
         const draftid = new mongoose.Types.ObjectId(req.query.id)
