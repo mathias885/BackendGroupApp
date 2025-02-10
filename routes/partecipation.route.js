@@ -5,29 +5,41 @@ const authenticateJWT = require('../middlewares/authenticateJWT');
 
 
 
-// Crea una nuova partecipazione
-router.post('/join',authenticateJWT, (req, res) => {
-try{
-    // Istanzia una nuova partecipazione con i dati ricevuti
-    const eventInstance = new partecipation({
+router.post('/join', authenticateJWT, (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const eventId = req.query.event;
 
-        userID: req.user.userId,
-        eventID: req.query.event,
-        
-    });
+        // Verifica se l'utente è già iscritto all'evento
+        partecipation.findOne({ userID: userId, eventID: eventId })
+            .then(existingParticipation => {
+                if (existingParticipation) {
+                    // L'utente è già iscritto all'evento
+                    return res.status(400).send("L'utente è già iscritto a questo evento.");
+                } 
 
-    // Salva la partecipazione nel database
-    eventInstance.save()
-        .then(result => {
-            res.send("partecipazione creata con successo");
-        })
-        .catch(err => {
-            res.status(500).send("Errore durante il salvataggio della partecipazione");
-        });
-    }catch (err) {
-        res.status(500).send("Errore durante la partecipazione");
+                // Istanzia una nuova partecipazione se non esiste già
+                const eventInstance = new partecipation({
+                    userID: userId,
+                    eventID: eventId,
+                });
+
+                // Salva la partecipazione nel database
+                eventInstance.save()
+                    .then(result => {
+                        res.send("Partecipazione creata con successo.");
+                    })
+                    .catch(err => {
+                        res.status(500).send("Errore durante il salvataggio della partecipazione.");
+                    });
+            })
+            .catch(err => {
+                res.status(500).send("Errore durante la verifica della partecipazione.");
+            });
+
+    } catch (err) {
+        res.status(500).send("Errore durante la partecipazione.");
     }
-
 });
 
 

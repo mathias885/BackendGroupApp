@@ -64,8 +64,7 @@ router.post('/create',authenticateJWT, (req, res) => {
     eventInstance.save()
         .then(result => {
             res.send("Evento creato con successo");
-        })
-        .catch(err => {
+        }).catch(err => {
             res.status(500).send("Errore durante il salvataggio dell'evento");
         });
 });
@@ -78,7 +77,7 @@ router.get('/partecipants', async (req, res) => {
         const event_id = new mongoose.Types.ObjectId(req.query.id);
         
         // Conta i partecipanti per l'evento
-        const participantsCount = await Partecipation.countDocuments({ event_id });
+        const participantsCount = await Partecipation.countDocuments({eventID: event_id });
         
         res.json({partecipants:participantsCount});
 

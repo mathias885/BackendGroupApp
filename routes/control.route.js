@@ -133,7 +133,7 @@ router.delete('/event',authenticateJWT,async (req, res) => {
             return res.status(404).json({ message: 'Evento non trovato' });
         }
         
-        const result = await Partecipation.deleteMany({ "eventID":id });
+        const result = await Partecipation.deleteMany({ eventID:id });
         if (!result) {
             return res.status(404).json({ message: 'nessuna parteciapzione trovata' });
         }

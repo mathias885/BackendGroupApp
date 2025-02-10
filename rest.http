@@ -1,6 +1,6 @@
 
-POST http://localhost:3000/eventi
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3Mzc0NTUwOTAsImV4cCI6MTczNzQ1ODY5MH0.jUjGYn7bXvtRFnOBtNOTxWChZXPxgakBQdQ-09hnF8M
+POST http://localhost:3000/event/create
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjEzMGFmOTJmYzQ5NzU2Nzg3MjgiLCJpYXQiOjE3MzkxOTIzMzIsImV4cCI6MTczOTE5NTkzMn0.uhyNizWfq-GFGf-bkxvc0f9x1MURxwuSGuAib9xsAu0
 Content-Type: application/json
 
 
@@ -12,7 +12,7 @@ Content-Type: application/json
         "target": "Tutti",
         "category": "Sport",
         "description": "non so.",
-        "max_subs": "300"
+        "max_subs": 300
 }
 
 ###
@@ -73,7 +73,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmN
 Content-Type: application/json
 
 ###
-GET http://localhost:3000/event/partecipants?id=67a8bf73194487f3f523cc90
+GET http://localhost:3000/event/partecipants?id=67a8c542194487f3f523cd28
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3Mzc0NTUwOTAsImV4cCI6MTczNzQ1ODY5MH0.jUjGYn7bXvtRFnOBtNOTxWChZXPxgakBQdQ-09hnF8M
 Content-Type: application/json
 
@@ -98,13 +98,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmN
 Content-Type: application/json
 
 ###
-POST http://localhost:3000/control/approve
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3Mzc4MTc4NDgsImV4cCI6MTczNzgyMTQ0OH0.o42h4HD2QHKCmDsPP2iN_hK4KTlVmZ2zzQAghzZCnMQ
+POST http://localhost:3000/partecipation/join?event=67a8bf73194487f3f523cc90
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3MzkxOTI5OTEsImV4cCI6MTczOTE5NjU5MX0.owW7I1v-ObbOcD3IHgZ-XckKd6uo3eifVquUepZT--E
 Content-Type: application/json
 
-{
-  "id":"679120510577256868dc9cd5"
-}
 
 ###
 GET http://localhost:3000/event/filtered?start=0&date="2025-01-01"&title=new

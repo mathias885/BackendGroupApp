@@ -199,3 +199,4 @@ app.listen(3000, () => {
     console.log("Server avviato su porta 3000");
 });
  
+module.exports = app; // Esporta `app` per i test
