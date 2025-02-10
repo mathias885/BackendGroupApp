@@ -80,7 +80,7 @@ router.get('/partecipants', async (req, res) => {
         // Conta i partecipanti per l'evento
         const participantsCount = await Partecipation.countDocuments({ event_id });
         
-        res.send(participantsCount);
+        res.json({partecipants:participantsCount});
 
     } catch (error) {
         res.status(500).send("Errore durante il recupero degli eventi");

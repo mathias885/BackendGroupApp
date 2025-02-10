@@ -73,7 +73,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmN
 Content-Type: application/json
 
 ###
-GET http://localhost:3000/eventi/partecipants?id=6785290943a347c53643548d
+GET http://localhost:3000/event/partecipants?id=67a8bf73194487f3f523cc90
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3Mzc0NTUwOTAsImV4cCI6MTczNzQ1ODY5MH0.jUjGYn7bXvtRFnOBtNOTxWChZXPxgakBQdQ-09hnF8M
 Content-Type: application/json
 

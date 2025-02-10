@@ -35,7 +35,7 @@ try{
 
 
 // Elimina una partecipazione specifica
-router.delete('/leaave',authenticateJWT, async (req, res) => {
+router.delete('/leave',authenticateJWT, async (req, res) => {
     try {
         userID = req.user.userId;
         eventID = req.query.event;
