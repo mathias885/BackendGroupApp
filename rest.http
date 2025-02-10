@@ -88,14 +88,13 @@ Content-Type: application/json
 
 ###
 GET  http://localhost:3000/control/drafts
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjEzMGFmOTJmYzQ5NzU2Nzg3MjgiLCJpYXQiOjE3Mzg2NjQyMTAsImV4cCI6MTczODY2NzgxMH0.rtvG3vmbMGXeU4GNG_7e8BQSVHHCPrE_oWAnKidnEEw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3MzkxOTM3MzYsImV4cCI6MTczOTE5NzMzNn0.oKPyJRZznQ6AKE0LmXYcCPtgeOWzMea6WvSpkVy5Rdo
 Content-Type: application/json
 
 
 ###
-GET http://localhost:3000/eventi/yourEvents?start=0
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjEzMGFmOTJmYzQ5NzU2Nzg3MjgiLCJpYXQiOjE3Mzc4MTY4MzUsImV4cCI6MTczNzgyMDQzNX0.tKHCxOU5czPFwkk7L5fBJcfsD99QPTVoG_uNPPvF-fU
-Content-Type: application/json
+GET http://localhost:3000/event/yourDrafts?start=0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3MzkxOTM3NjIsImV4cCI6MTczOTE5NzM2Mn0.6UtT_4Sqjq238TKr31ztAOnTCLOD79YIjCdP8sJ6WnA
 
 ###
 POST http://localhost:3000/partecipation/join?event=67a8bf73194487f3f523cc90
