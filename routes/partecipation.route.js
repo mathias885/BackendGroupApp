@@ -6,13 +6,13 @@ const authenticateJWT = require('../middlewares/authenticateJWT');
 
 
 // Crea una nuova partecipazione
-router.post('/',authenticateJWT, (req, res) => {
+router.post('/join',authenticateJWT, (req, res) => {
 try{
     // Istanzia una nuova partecipazione con i dati ricevuti
     const eventInstance = new partecipation({
 
         userID: req.user.userId,
-        eventID: req.body.event,
+        eventID: req.body.eventID,
         
     });
 
@@ -35,10 +35,10 @@ try{
 
 
 // Elimina una partecipazione specifica
-router.delete('/single',authenticateJWT, async (req, res) => {
+router.delete('/leave',authenticateJWT, async (req, res) => {
     try {
         userID = req.user.userId;
-        eventID = req.body.event;
+        eventID = req.query.id;
 
         // Elimina la partecipazione specifica
         const result = await partecipation.deleteOne({ userID, eventID });

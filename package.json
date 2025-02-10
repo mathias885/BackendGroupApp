@@ -1,32 +1,25 @@
 {
-
+  "name": "my-api",
+  "version": "1.0.0",
+  "description": "API deployed on Render",
+  "main": "main.js",
   "scripts": {
-
-    "start": "nodemon test.js"
-
+    "start": "node test.js",
+    "build": "echo 'No build step'",
+    "prestart": "npm install"
   },
-
   "dependencies": {
-
     "bcrypt": "^5.1.1",
-
     "cors": "^2.8.5",
-
     "dot": "^1.1.3",
-
     "dotenv": "^16.4.5",
-
     "env": "^0.0.2",
-
     "express": "^4.21.2",
-
     "jsonwebtoken": "^9.0.2",
-
     "mongoose": "^8.9.2",
-
     "node-cron": "^3.0.3"
-
+  },
+  "engines": {
+    "node": ">=16"
   }
-
 }
-
