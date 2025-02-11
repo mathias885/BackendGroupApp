@@ -169,14 +169,14 @@ router.get('/yourEvents', authenticateJWT, async (req, res) => {
         const start = parseInt(req.query.start, 10) || 0;  // Default: 0 se non specificato
 
         // Trova tutte le associazioni tra l'utente e gli eventi tramite la collezione Organizes
-        const organizes = await Organization.find({ userID: new ObjectId(req.user.userId) });
+        const partecipates = await Organization.find({ userID: new ObjectId(req.user.userId) });
 
-        if (!organizes.length) {
+        if (!partecipates.length) {
             return res.status(404).json({ message: 'Nessun evento trovato per questo utente' });
         }
 
         // Ottieni gli ID degli eventi associati all'utente
-        const eventIds = organizes.map(org => org.eventID);
+        const eventIds = partecipates.map(org => org.eventID);
 
         // Recupera i primi 100 eventi a partire dagli ID trovati
         const events = await Event.find({ _id: { $in: eventIds } })

@@ -5,40 +5,34 @@ const authenticateJWT = require('../middlewares/authenticateJWT');
 
 
 
-router.post('/join', authenticateJWT, (req, res) => {
+router.post('/join', authenticateJWT, async (req, res) => {
     try {
         const userId = req.user.userId;
         const eventId = req.query.event;
 
+        if (!eventId) {
+            return res.status(400).send("ID evento mancante.");
+        }
+
         // Verifica se l'utente è già iscritto all'evento
-        partecipation.findOne({ userID: userId, eventID: eventId })
-            .then(existingParticipation => {
-                if (existingParticipation) {
-                    // L'utente è già iscritto all'evento
-                    return res.status(400).send("L'utente è già iscritto a questo evento.");
-                } 
+        const existingParticipation = await Participation.findOne({ userID: userId, eventID: eventId });
 
-                // Istanzia una nuova partecipazione se non esiste già
-                const eventInstance = new partecipation({
-                    userID: userId,
-                    eventID: eventId,
-                });
+        if (existingParticipation) {
+            return res.status(400).send("L'utente è già iscritto a questo evento.");
+        }
 
-                // Salva la partecipazione nel database
-                eventInstance.save()
-                    .then(result => {
-                        res.send("Partecipazione creata con successo.");
-                    })
-                    .catch(err => {
-                        res.status(500).send("Errore durante il salvataggio della partecipazione.");
-                    });
-            })
-            .catch(err => {
-                res.status(500).send("Errore durante la verifica della partecipazione.");
-            });
+        // Creazione della partecipazione
+        const eventInstance = new Participation({
+            userID: userId,
+            eventID: eventId,
+        });
+
+        await eventInstance.save();
+        res.send("Partecipazione creata con successo.");
 
     } catch (err) {
-        res.status(500).send("Errore durante la partecipazione.");
+        console.error("Errore durante la partecipazione:", err);
+        res.status(500).send("Errore interno del server.");
     }
 });
 
@@ -46,22 +40,26 @@ router.post('/join', authenticateJWT, (req, res) => {
 
 
 
-// Elimina una partecipazione specifica
-router.delete('/leave',authenticateJWT, async (req, res) => {
+router.delete('/leave', authenticateJWT, async (req, res) => {
     try {
-        userID = req.user.userId;
-        eventID = req.query.event;
+        const userID = req.user.userId;
+        const eventID = req.query.event;
 
-        // Elimina la partecipazione specifica
-        const result = await partecipation.deleteOne({ userID, eventID });
-
-        if (result.deletedCount === 0) {
-            return res.status(404).send('Partecipazione non trovata');
+        if (!eventID) {
+            return res.status(400).send("ID evento mancante.");
         }
 
-        res.send(`Partecipazione eliminata`);
+        // Elimina la partecipazione specifica
+        const result = await Participation.deleteOne({ userID, eventID });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).send("Partecipazione non trovata.");
+        }
+
+        res.send("Partecipazione eliminata con successo.");
     } catch (err) {
-        res.status(500).send("Errore durante l'eliminazione della partecipazione");
+        console.error("Errore durante l'eliminazione della partecipazione:", err);
+        res.status(500).send("Errore interno del server.");
     }
 });
 
