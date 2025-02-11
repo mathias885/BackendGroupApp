@@ -116,7 +116,7 @@ router.delete('/delete_event', authenticateJWT, async (req, res) => {
         }
 
         // Verifica che l'utente sia il creatore dell'evento 
-        const organizer = await Organization.findOne({eventID: event_id ,userID: userId });
+        const organizer = await Organization.findOne({eventID: eventId ,userID: userId });
         if (!organizer) {
             return res.status(403).json({ message: 'Non hai i permessi per eliminare questo evento' });
         }
@@ -125,8 +125,8 @@ router.delete('/delete_event', authenticateJWT, async (req, res) => {
         await Event.deleteOne({ _id: eventId });
 
         //elimina le partecipazioni legate all'evento
-        await Partecipation.deleteMany({eventID: event_id });
-        await Organization.deleteMany({eventID: event_id });
+        await Partecipation.deleteMany({eventID: eventId });
+        await Organization.deleteMany({eventID: eventId });
 
         res.json({ message: 'Evento eliminato con successo' });
     } catch (err) {

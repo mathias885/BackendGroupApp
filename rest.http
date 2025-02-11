@@ -95,6 +95,6 @@ GET http://localhost:3000/event/filtered?start=0&date="2025-01-01"&title=new
 Content-Type: application/json
 
 ###
-DELETE  http://localhost:3000/event/delete_draft?id=67abd277fc4c099dbffa944f
+DELETE  http://localhost:3000/event/delete_event?id=67abd1b6636f915fc3ca1b74
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjEzMGFmOTJmYzQ5NzU2Nzg3MjgiLCJpYXQiOjE3MzkzMTQwMTUsImV4cCI6MTczOTMxNzYxNX0.eT2C_uUnkoYKJRFSF6LY2E-sJHHuyE8sqlp7BpbgjFg
 Content-Type: application/json
