@@ -1,0 +1,592 @@
+openapi: 3.0.0
+info:
+  title: Event Management API
+  description: API per la creazione e gestione di eventi
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+tags:
+  - name: access
+    description: login e logout utente
+  - name: control
+    description: Funzioni disponibili solo agli amministratori
+  - name: event
+    description: Creare, visualizzare e gestire eventi
+  - name: partecipation
+    description: Iscriversi e disiscriversi ad un evento
+  - name: registration
+    description: Everything about your Pets
+paths:
+  /access:
+    post:
+      tags:
+        - access
+      summary: Autenticazione utente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mail:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Accesso riuscito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    type: object
+        '401':
+          description: E-mail o password non validi
+        '500':
+          description: Errore interno del server
+  /access/token_access:
+    post:
+      tags:
+        - access
+      summary: Accesso se già in possesso di token
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Accesso effettuato con successo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    type: object
+        '404':
+          description: Utente non trovato
+        '500':
+          description: Errore interno del server
+  /access/logout:
+    post:
+      tags:
+        - access
+      summary: Logout utente
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logout effettuato con successo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  advice:
+                    type: string
+        '400':
+          description: Header di autorizzazione non valido
+        '500':
+          description: Errore interno del server
+          
+  /control/drafts:
+    get:
+      tags:
+        - control
+      summary: Mostra e permette di filtrare le draft in attesa di approvazione
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: start
+          in: query
+          schema:
+            type: integer
+          description: Offset per la paginazione
+        - name: price
+          in: query
+          schema:
+            type: number
+          description: Filtra eventi con prezzo inferiore a questo valore
+        - name: date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filtra eventi dopo questa data
+        - name: category
+          in: query
+          schema:
+            type: string
+          description: Categoria dell'evento
+        - name: target
+          in: query
+          schema:
+            type: string
+          description: Pubblico target dell'evento
+        - name: title
+          in: query
+          schema:
+            type: string
+          description: Ricerca eventi per titolo      
+          
+      responses:
+        '200':
+          description: Lista delle draft ottenuta con successo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Draft'
+          
+  /control/approve:
+    post:
+      summary: Approva una draft e la trasforma in un evento
+      tags:
+        - control
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: ID della draft da approvare
+      responses:
+        200:
+          description: Draft approvata e trasformata in evento
+        401:
+          description: Utente non autorizzato
+        404:
+          description: Draft non trovata
+        500:
+          description: Errore del server
+
+  /control/draft:
+    delete:
+      summary: Elimina una draft
+      tags:
+        - control
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: ID della draft da eliminare
+          schema:
+            type: string
+      responses:
+        200:
+          description: Draft eliminata con successo
+        401:
+          description: Utente non autorizzato
+        404:
+          description: Draft non trovata
+        500:
+          description: Errore del server
+
+  /control/event:
+    delete:
+      summary: Elimina un evento
+      tags:
+        - control
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: ID dell'evento da eliminare
+          schema:
+            type: string
+      responses:
+        200:
+          description: Evento eliminato con successo
+        401:
+          description: Utente non autorizzato
+        404:
+          description: Evento non trovato
+        500:
+          description: Errore del server
+          
+  /event/yourPartecipations:
+    get:
+      summary: Ottieni eventi a cui partecipa l'utente
+      tags:
+        - event
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: start
+          in: query
+          description: Indice di partenza per la paginazione (default 0)
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        200:
+          description: Lista degli eventi a cui partecipa l'utente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        400:
+          description: Nessun evento trovato per questo utente
+        500:
+          description: Errore interno durante il recupero degli eventi
+
+          
+  /event/create:
+    post:
+      tags:
+        - event
+
+      summary: Creazione di un nuovo evento
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                date:
+                  type: string
+                  format: date-time
+                location:
+                  type: string
+                price:
+                  type: number
+                category:
+                  type: string
+                target:
+                  type: string
+                description:
+                  type: string
+                max_subs:
+                  type: integer
+      responses:
+        '201':
+          description: Evento creato con successo
+        '500':
+          description: Errore durante il salvataggio dell'evento
+          
+  /event/filtered:
+    get:
+      tags:
+        - event
+      summary: Recupera la lista degli eventi
+      parameters:
+        - name: start
+          in: query
+          schema:
+            type: integer
+          description: Offset per la paginazione
+        - name: price
+          in: query
+          schema:
+            type: number
+          description: Filtra eventi con prezzo inferiore a questo valore
+        - name: date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filtra eventi dopo questa data
+        - name: category
+          in: query
+          schema:
+            type: string
+          description: Categoria dell'evento
+        - name: target
+          in: query
+          schema:
+            type: string
+          description: Pubblico target dell'evento
+        - name: title
+          in: query
+          schema:
+            type: string
+          description: Ricerca eventi per titolo
+      responses:
+        '200':
+          description: Lista degli eventi a cui partecipa l'utente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        '500':
+          description: Errore durante il recupero degli eventi
+          
+  /event/delete_event:
+    delete:
+      tags:
+        - event
+      summary: Elimina un evento per ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Evento eliminato con successo
+        '403':
+          description: Non autorizzato a eliminare questo evento
+        '404':
+          description: Evento non trovato
+        '500':
+          description: Errore interno del server
+          
+  /event/participants:
+    get:
+      tags:
+        - event
+      summary: Restituisce il numero di partecipanti a un evento
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Numero di partecipanti restituito con successo
+        '500':
+          description: Errore durante il recupero del numero di partecipanti
+
+  /event/delete_draft:
+    delete:
+      summary: Elimina una draft per ID
+      tags:
+        - event
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: ID della draft da eliminare
+          schema:
+            type: string
+      responses:
+        200:
+          description: Draft eliminata con successo
+        403:
+          description: Utente non autorizzato a eliminare la draft
+        404:
+          description: Draft non trovata
+        500:
+          description: Errore del server
+
+  /event/yourEvents:
+    get:
+      summary: Ottieni i primi 100 eventi organizzati dall'utente
+      tags:
+        - event
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: start
+          in: query
+          description: Numero iniziale di risultati da saltare
+          schema:
+            type: integer
+            default: 0
+      responses:
+        200:
+          description: Lista degli eventi ottenuta con successo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        404:
+          description: Nessun evento trovato per questo utente
+        500:
+          description: Errore del server
+
+  /event/yourDrafts:
+    get:
+      summary: Ottieni le prime 100 draft organizzate dall'utente
+      tags:
+        - event
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: start
+          in: query
+          description: Numero iniziale di risultati da saltare
+          schema:
+            type: integer
+            default: 0
+      responses:
+        200:
+          description: Lista delle draft ottenuta con successo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Draft'
+        500:
+          description: Errore del server
+
+  /participation/join:
+    post:
+      tags:
+        - partecipation
+      summary: Partecipa a un evento
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                eventId:
+                  type: string
+      responses:
+        '200':
+          description: Partecipazione registrata con successo
+        '500':
+          description: Errore durante la registrazione della partecipazione
+
+  /participation/leave:
+    delete:
+      tags:
+        - partecipation
+      summary: Rimuove una partecipazione a un evento
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Partecipazione eliminata con successo
+        '404':
+          description: Partecipazione non trovata
+        '500':
+          description: Errore durante l'eliminazione della partecipazione
+          
+  /register:
+    post:
+      summary: Registra un nuovo utente
+      tags:
+        - registration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mail:
+                  type: string
+                  format: email
+                  description: Indirizzo email dell'utente
+                password:
+                  type: string
+                  format: password
+                  description: Password dell'utente
+                name:
+                  type: string
+                  description: Nome dell'utente
+                surname:
+                  type: string
+                  description: Cognome dell'utente
+                dateOfBirth:
+                  type: string
+                  format: date
+                  description: Data di nascita dell'utente
+                telephone:
+                  type: string
+                  description: Numero di telefono dell'utente
+      responses:
+        201:
+          description: Utente registrato con successo
+        400:
+          description: Campi obbligatori mancanti
+        409:
+          description: Esiste già un utente registrato con questa e-mail
+        500:
+          description: Errore interno del server
+
+components:
+  schemas:
+    Draft:
+      type: object
+      properties:
+        title:
+          type: string
+        date:
+          type: string
+          format: date
+        location:
+          type: string
+        price:
+          type: number
+        target:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        max_subs:
+          type: integer
+    Event:
+      type: object
+      properties:
+        title:
+          type: string
+        date:
+          type: string
+          format: date
+        location:
+          type: string
+        price:
+          type: number
+        target:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        max_subs:
+          type: integer
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
