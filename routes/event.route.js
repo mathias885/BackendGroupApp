@@ -122,7 +122,7 @@ router.delete('/delete_event', authenticateJWT, async (req, res) => {
         }
 
         // Elimina l'evento
-        await event.remove();
+        await Event.deleteOne({ _id: eventId });
 
         //elimina le partecipazioni legate all'evento
         await Partecipation.deleteMany({eventID: event_id });
@@ -139,32 +139,30 @@ router.delete('/delete_event', authenticateJWT, async (req, res) => {
 //cambiare url
 
 // Elimina draft per id preso da query
-router.delete('/delete_draft', authenticateJWT, async (req, res) => {
+router.delete('/delete_draft',authenticateJWT, async (req, res) => {
     try {
-        // Ottieni l'ID del draft dalla query e convertilo in ObjectId
-        const draftid = new mongoose.Types.ObjectId(req.query.id);
-        
-        // Trova il draft con l'ID specificato
+        // Ottieni l'evento tramite ID
+        const draftid = new mongoose.Types.ObjectId(req.query.id)
         const draft = await Draft.findById(draftid);
 
         if (!draft) {
             return res.status(404).json({ message: 'Evento non trovato' });
         }
 
-        // Confronta ObjectId correttamente
+        // Verifica che l'utente sia il creatore dell'evento
         if (draft.organizer.toString() !== req.user.userId.toString()) {
-            return res.status(403).json({ message: 'Non hai i permessi per eliminare questo draft' });
+            return res.status(403).json({ message: 'Non hai i permessi per eliminare questa draft' });
         }
 
-        // Elimina il draft
-        await draft.remove();
+        // Elimina l'evento
+        await Draft.deleteOne({ _id: draftid });
 
-        res.json({ message: 'Draft eliminata con successo' });
-
+        res.json({ message: 'draft eliminata con successo'});
     } catch (err) {
         res.status(500).json({ message: 'Errore del server', error: err.message });
     }
 });
+
 
 // Ottieni i primi 100 eventi organizzati dall'utente
 router.get('/yourEvents', authenticateJWT, async (req, res) => {
