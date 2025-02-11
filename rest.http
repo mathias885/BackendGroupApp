@@ -82,10 +82,13 @@ GET http://localhost:3000/event/yourDrafts?start=0
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3MzkxOTM3NjIsImV4cCI6MTczOTE5NzM2Mn0.6UtT_4Sqjq238TKr31ztAOnTCLOD79YIjCdP8sJ6WnA
 
 ###
-POST http://localhost:3000/partecipation/join?event=67a8c542194487f3f523cd28
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3MzkyMDk3ODYsImV4cCI6MTczOTIxMzM4Nn0.nxF4bjd01cGZyYDPQ-_2Bn_CSuLpTf2FJRZlGKgpIcU
+POST http://localhost:3000/partecipation/join
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3MzkzMTA5NDgsImV4cCI6MTczOTMxNDU0OH0.yLXeRhqLpTBe_ULUUOnc7sCgSoaSZpN_OgkPJGmhX0c
 Content-Type: application/json
 
+{
+  "event":"67a8bf73194487f3f523cc90"
+}
 
 ###
 GET http://localhost:3000/event/filtered?start=0&date="2025-01-01"&title=new

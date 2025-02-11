@@ -59,9 +59,6 @@ describe('Event API Tests', () => {
         expect(response.body.length).toBeGreaterThan(0); // Assicura che non sia vuoto
 
         testDraft = response.body[0]; // Salva il corpo della risposta in una variabile
-
-        console.log('Test Draft in funzione:', testDraft); // Stampa nel log
-
     
     });
 
@@ -73,8 +70,6 @@ describe('Event API Tests', () => {
             .send({ id: testDraft._id })
             .set('Authorization', `Bearer ${userToken}`);
             
-            console.log('Test Draft fuori funzione funzione:', testDraft); // Stampa nel log
-
         expect(response.statusCode).toBe(200);
     });
 
@@ -99,8 +94,10 @@ describe('Event API Tests', () => {
     //crea una partecipazione all'evento di test
     test('POST /partecipation/join - crea una partecipazione all evento di test', async () => {
         const response = await request(app)
-            .post('/partecipation/join?event=65b0a3c4a4d123456789abcd')
-            .set('Authorization', `Bearer ${userToken}`);
+            .post(`/partecipation/join`)
+            .set('Authorization', `Bearer ${userToken}`)
+            .send({ event: testEvent });
+
         expect(response.statusCode).toBe(200);
     });
 
@@ -109,7 +106,7 @@ describe('Event API Tests', () => {
 
     test('DELETE /control/draft - Should return 401 if not admin', async () => {
         const response = await request(app)
-            .delete('/control/draft?id=65b0a3c4a4d123456789abcd')
+            .delete(`/control/draft?id=${testEvent}`)
             .set('Authorization', `Bearer ${userToken}`);
         expect(response.statusCode).toBe(200);
     });
