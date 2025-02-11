@@ -28,10 +28,9 @@ router.post('/join', authenticateJWT, async (req, res) => {
         });
 
         await eventInstance.save();
-        res.send("Partecipazione creata con successo.");
 
     } catch (err) {
-        console.error("Errore durante la partecipazione:", err);
+
         res.status(500).send("Errore interno del server.");
     }
 });
@@ -56,9 +55,8 @@ router.delete('/leave', authenticateJWT, async (req, res) => {
             return res.status(404).send("Partecipazione non trovata.");
         }
 
-        res.send("Partecipazione eliminata con successo.");
     } catch (err) {
-        console.error("Errore durante l'eliminazione della partecipazione:", err);
+
         res.status(500).send("Errore interno del server.");
     }
 });

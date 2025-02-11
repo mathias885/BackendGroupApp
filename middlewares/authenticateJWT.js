@@ -14,7 +14,7 @@ function authenticateJWT(req, res, next) {
 
     // Check if the current route is exempted
     if (exemptedRoutes.some(route => req.path.startsWith(route))) {
-        console.log("Token check avoided for route:", req.path);
+       // console.log("Token check avoided for route:", req.path);
         return next();
     }
 
@@ -42,7 +42,7 @@ function authenticateJWT(req, res, next) {
         req.user = user;
 
         // Log di debugging
-        console.log("Token valido per l'utente:", user);
+        //console.log("Token valido per l'utente:", user);
 
         // Passa alla prossima funzione o route
         next();

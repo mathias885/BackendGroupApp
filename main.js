@@ -19,11 +19,8 @@ app.use(express.json());
 // Connessione al database MongoDB
 const password=process.env.PASSWORD;
 const user=process.env.USER;
-console.log(password);
-console.log(user);
 
 const uri = `mongodb+srv://${user}:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
-console.log(uri);
 
 mongoose.connect(uri)
 .then(() => {

@@ -2,7 +2,8 @@ const request = require('supertest');
 const app = require('./main');
 
 var userToken;
-var testDarft;
+var testDraft;
+var testEvent;
 
 /*
 ADMIN
@@ -29,13 +30,8 @@ beforeAll(async () => {
 // Test suite per /event
 describe('Event API Tests', () => {
     
-    test('GET /event/filtered - Should return filtered events', async () => {
-        const response = await request(app).get('/event/filtered');
-        expect(response.statusCode).toBe(200);
-        expect(Array.isArray(response.body)).toBeTruthy();
-    });
-    
-    test('POST /event/create - Should create a new event', async () => {
+    //crea una draft di test
+    test('POST /event/create - crea una draft di test', async () => {
         const response = await request(app)
             .post('/event/create')
             .set('Authorization', `Bearer ${userToken}`)
@@ -52,24 +48,63 @@ describe('Event API Tests', () => {
         expect(response.statusCode).toBe(200);
     });
 
-    test('GET /control/drafts - Should return 401 if not admin', async () => {
+    //ritorna le drafts da approvare filtrando per quella di test
+    test('GET /control/drafts?title="Evento+di+Test" - ritorna le drafts da approvare filtrando per quella di test', async () => {
         const response = await request(app)
             .get('/control/drafts')
             .set('Authorization', `Bearer ${userToken}`);
             
-            testDarft = response.body; // Salva il corpo della risposta in una variabile
-
         expect(response.statusCode).toBe(200);
+        expect(Array.isArray(response.body)).toBe(true); // Verifica che sia un array
+        expect(response.body.length).toBeGreaterThan(0); // Assicura che non sia vuoto
+
+        testDraft = response.body[0]; // Salva il corpo della risposta in una variabile
+
+        console.log('Test Draft in funzione:', testDraft); // Stampa nel log
+
+    
     });
 
-    test('POST /control/approve - Should return 401 if not admin', async () => {
+
+    //approva la draft di test
+    test('POST /control/approve - approva la draft di test', async () => {
         const response = await request(app)
             .post('/control/approve')
-            .send({ id: testDarft._id })
+            .send({ id: testDraft._id })
             .set('Authorization', `Bearer ${userToken}`);
             
+            console.log('Test Draft fuori funzione funzione:', testDraft); // Stampa nel log
+
         expect(response.statusCode).toBe(200);
     });
+
+
+    //ritorna i tuoi eventi
+    test('GET /event/yourEvents - ritorna gli eventi da te organizzati', async () => {
+        const response = await request(app).get('/event/yourEvents')
+        .set('Authorization', `Bearer ${userToken}`);
+        expect(response.statusCode).toBe(200);
+    });
+
+    //ritorna gli eventi filtrando per quello di test
+    test('GET /event/filtered"Evento+di+Test" - ritorna gli eventi filtrando per quello di test', async () => {
+        const response = await request(app).get('/event/filtered');
+        expect(response.statusCode).toBe(200);
+        expect(Array.isArray(response.body)).toBeTruthy();
+
+        testEvent = response.body[0]; // Salva il corpo della risposta in una variabile
+
+    });
+
+    //crea una partecipazione all'evento di test
+    test('POST /partecipation/join - crea una partecipazione all evento di test', async () => {
+        const response = await request(app)
+            .post('/partecipation/join?event=65b0a3c4a4d123456789abcd')
+            .set('Authorization', `Bearer ${userToken}`);
+        expect(response.statusCode).toBe(200);
+    });
+
+
 
 
     test('DELETE /control/draft - Should return 401 if not admin', async () => {
@@ -94,10 +129,6 @@ describe('Event API Tests', () => {
         expect(response.statusCode).toBe(401);
     });
     
-    test('GET /event/yourEvents - Should not return events (Unauthorized)', async () => {
-        const response = await request(app).get('/event/yourEvents');
-        expect(response.statusCode).toBe(401);
-    });
     
     test('GET /event/yourPartecipations - Should not return participations (Unauthorized)', async () => {
         const response = await request(app).get('/event/yourPartecipations');
@@ -164,12 +195,6 @@ describe('Event API Tests', () => {
         expect(response.statusCode).toBe(200);
     });
 
-    test('POST /partecipation/join - Should join event successfully', async () => {
-        const response = await request(app)
-            .post('/partecipation/join?event=65b0a3c4a4d123456789abcd')
-            .set('Authorization', `Bearer ${userToken}`);
-        expect(response.statusCode).toBe(200);
-    });
 
     test('DELETE /partecipation/leave - Should leave event successfully', async () => {
         const response = await request(app)

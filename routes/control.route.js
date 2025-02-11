@@ -58,8 +58,8 @@ router.post('/approve',authenticateJWT,async (req, res) => {
 
         const id=new ObjectId(req.body.id);
         const draft = await Draft.findById(id);
-        console.log(draft);
 
+        
         if (!draft) {
             return res.status(404).json({ message: 'draft non trovato' });
         }
@@ -133,10 +133,8 @@ router.delete('/event',authenticateJWT,async (req, res) => {
             return res.status(404).json({ message: 'Evento non trovato' });
         }
         
-        const result = await Partecipation.deleteMany({ eventID:id });
-        if (!result) {
-            return res.status(404).json({ message: 'nessuna parteciapzione trovata' });
-        }
+        await Partecipation.deleteMany({ eventID:id });
+        await Organization.deleteMany({eventID: id });
 
         res.json({ message: 'Evento eliminato con successo', deletedEvent });
     } catch (err) {

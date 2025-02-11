@@ -44,7 +44,7 @@ router.get('/filtered', async (req, res) => {
 
 // Crea un nuovo evento
 router.post('/create',authenticateJWT, (req, res) => {
-    console.log("Dati ricevuti per l'evento:", req.body);
+
     const organizer = req.user.userId; 
 
     // Istanzia un nuovo evento con i dati ricevuti
@@ -116,7 +116,7 @@ router.delete('/delete_event', authenticateJWT, async (req, res) => {
         }
 
         // Verifica che l'utente sia il creatore dell'evento 
-        const organizer = await Organization.findOne({ eventId, userId });
+        const organizer = await Organization.findOne({eventID: event_id ,userID: userId });
         if (!organizer) {
             return res.status(403).json({ message: 'Non hai i permessi per eliminare questo evento' });
         }
@@ -125,11 +125,12 @@ router.delete('/delete_event', authenticateJWT, async (req, res) => {
         await event.remove();
 
         //elimina le partecipazioni legate all'evento
-        const result = await partecipation.deleteMany({ eventId });
+        await Partecipation.deleteMany({eventID: event_id });
+        await Organization.deleteMany({eventID: event_id });
 
         res.json({ message: 'Evento eliminato con successo' });
     } catch (err) {
-        console.error('Errore durante l\'eliminazione dell\'evento:', err);
+
         res.status(500).json({ message: 'Errore durante l\'eliminazione dell\'evento' });
     }
 });
