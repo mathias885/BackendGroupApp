@@ -59,7 +59,7 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3000/event/partecipants?id=67a8c542194487f3f523cd28
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3Mzc0NTUwOTAsImV4cCI6MTczNzQ1ODY5MH0.jUjGYn7bXvtRFnOBtNOTxWChZXPxgakBQdQ-09hnF8M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3MzkzMTA5NDgsImV4cCI6MTczOTMxNDU0OH0.yLXeRhqLpTBe_ULUUOnc7sCgSoaSZpN_OgkPJGmhX0c
 Content-Type: application/json
 
 ###
@@ -95,5 +95,6 @@ GET http://localhost:3000/event/filtered?start=0&date="2025-01-01"&title=new
 Content-Type: application/json
 
 ###
-DELETE  http://localhost:3000/delete-old-events
+GET  http://localhost:3000/event/filtered?title=Evento+di+Test
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzhmNjJhYWY0MzJiOTEzMjRiYzE0N2EiLCJpYXQiOjE3MzkzMTA5NDgsImV4cCI6MTczOTMxNDU0OH0.yLXeRhqLpTBe_ULUUOnc7sCgSoaSZpN_OgkPJGmhX0c
 Content-Type: application/json

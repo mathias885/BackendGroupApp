@@ -36,7 +36,7 @@ describe('Event API Tests', () => {
             .post('/event/create')
             .set('Authorization', `Bearer ${userToken}`)
             .send({
-                title: "Evento di Test",
+                title: "EventoDiTest",
                 date: "2025-01-01T10:00:00.000Z",
                 location: "Test City",
                 price: 10,
@@ -49,9 +49,9 @@ describe('Event API Tests', () => {
     });
 
     //ritorna le drafts da approvare filtrando per quella di test
-    test('GET /control/drafts?title="Evento+di+Test" - ritorna le drafts da approvare filtrando per quella di test', async () => {
+    test('GET /control/drafts?title="EventoDiTest" - ritorna le drafts da approvare filtrando per quella di test', async () => {
         const response = await request(app)
-            .get('/control/drafts')
+            .get('/control/drafts?title=EventoDiTest')
             .set('Authorization', `Bearer ${userToken}`);
             
         expect(response.statusCode).toBe(200);
@@ -82,12 +82,14 @@ describe('Event API Tests', () => {
     });
 
     //ritorna gli eventi filtrando per quello di test
-    test('GET /event/filtered"Evento+di+Test" - ritorna gli eventi filtrando per quello di test', async () => {
-        const response = await request(app).get('/event/filtered');
+    test('GET /event/filtered?title=EventoDiTest - ritorna gli eventi filtrando per quello di test', async () => {
+        const response = await request(app).get('/event/filtered?title=EventoDiTest');
         expect(response.statusCode).toBe(200);
         expect(Array.isArray(response.body)).toBeTruthy();
 
         testEvent = response.body[0]; // Salva il corpo della risposta in una variabile
+        console.log(testEvent);
+        console.log(testEvent._id);
 
     });
 
@@ -98,8 +100,20 @@ describe('Event API Tests', () => {
             .set('Authorization', `Bearer ${userToken}`)
             .send({ event: testEvent });
 
+            console.log(testEvent);
+            console.log(testEvent._id);
+    
         expect(response.statusCode).toBe(200);
     });
+
+  // conta i partecipanti dell'evento di test
+test(`GET /event/partecipants?id=${testEvent} - conta i partecipanti dell evento di test`, async () => {
+    const response = await request(app).get(`/event/partecipants?id=${testEvent}`); 
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty('participants', 1);
+});
+
 
 
 
@@ -111,10 +125,7 @@ describe('Event API Tests', () => {
         expect(response.statusCode).toBe(200);
     });
 
-    test('GET /event/partecipants - Should return participant count (Invalid ID)', async () => {
-        const response = await request(app).get('/event/partecipants?id=invalidID');
-        expect(response.statusCode).toBe(500);
-    });
+    
     
     test('GET /event/id - Should return event by ID (Invalid ID)', async () => {
         const response = await request(app).get('/event/id?id=invalidID');
