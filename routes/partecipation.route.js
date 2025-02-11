@@ -28,6 +28,7 @@ router.post('/join', authenticateJWT, async (req, res) => {
         });
 
         await eventInstance.save();
+        return res.status(200).send("Partecipazione registrata con successo."); 
 
     } catch (err) {
 
@@ -54,6 +55,8 @@ router.delete('/leave', authenticateJWT, async (req, res) => {
         if (result.deletedCount === 0) {
             return res.status(404).send("Partecipazione non trovata.");
         }
+
+        return res.status(200).send("Partecipazione cancellata con successo."); 
 
     } catch (err) {
 
