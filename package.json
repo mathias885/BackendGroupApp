@@ -1,5 +1,15 @@
 {
 
+  "name": "my-api",
+  "version": "1.0.0",
+  "description": "API deployed on Render",
+  "main": "main.js",
+  "scripts": {
+    "start": "node test.js",
+    "build": "echo 'No build step'",
+    "prestart": "npm install"
+  },
+
   "dependencies": {
 
     "bcrypt": "^5.1.1",
@@ -28,6 +38,9 @@
 
     "supertest": "^7.0.0"
 
+  },
+  "engines": {
+    "node": ">=16"
   }
 
 }
