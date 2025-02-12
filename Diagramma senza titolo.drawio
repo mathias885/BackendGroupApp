@@ -12,6 +12,14 @@
             <mxPoint x="-27" y="7" as="offset" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="xwjg2SGbESSFHlxocyUC-3" value="&amp;laquo;Annotation&amp;raquo;&lt;br/&gt;&lt;b&gt;Component&lt;/b&gt;" style="html=1;dropTarget=0;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="540" y="70" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="xwjg2SGbESSFHlxocyUC-4" value="" style="shape=module;jettyWidth=8;jettyHeight=4;" vertex="1" parent="xwjg2SGbESSFHlxocyUC-3">
+          <mxGeometry x="1" width="20" height="20" relative="1" as="geometry">
+            <mxPoint x="-27" y="7" as="offset" />
+          </mxGeometry>
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
