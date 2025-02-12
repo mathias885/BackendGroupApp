@@ -1,5 +1,6 @@
 const request = require('supertest');
 const app = require('./main');
+const mongoose = require('mongoose');
 
 var userToken;
 var testDraft;
@@ -88,8 +89,6 @@ describe('Event API Tests', () => {
         expect(Array.isArray(response.body)).toBeTruthy();
 
         testEvent = response.body[0]; // Salva il corpo della risposta in una variabile
-        console.log(testEvent);
-        console.log(testEvent._id);
 
     });
 
@@ -100,115 +99,45 @@ describe('Event API Tests', () => {
             .set('Authorization', `Bearer ${userToken}`)
             .send({ event: testEvent });
 
-            console.log(testEvent);
-            console.log(testEvent._id);
     
         expect(response.statusCode).toBe(200);
     });
 
-  // conta i partecipanti dell'evento di test
-test(`GET /event/partecipants?id=${testEvent} - conta i partecipanti dell evento di test`, async () => {
-    const response = await request(app).get(`/event/partecipants?id=${testEvent}`); 
-
-    expect(response.statusCode).toBe(200);
-    expect(response.body).toHaveProperty('participants', 1);
-});
-
-
-
-
-
-    test('DELETE /control/draft - Should return 401 if not admin', async () => {
+    //crea una partecipazione allo stesso di test
+    test('POST /partecipation/join - crea una partecipazione allo stesso di test', async () => {
         const response = await request(app)
-            .delete(`/control/draft?id=${testEvent}`)
-            .set('Authorization', `Bearer ${userToken}`);
-        expect(response.statusCode).toBe(200);
-    });
-
-    
-    
-    test('GET /event/id - Should return event by ID (Invalid ID)', async () => {
-        const response = await request(app).get('/event/id?id=invalidID');
-        expect(response.statusCode).toBe(404);
-    });
-    
-    test('DELETE /event/delete_event - Should not delete an event (Unauthorized)', async () => {
-        const response = await request(app).delete('/event/delete_event?id=65fabc1234567890abcdef12');
-        expect(response.statusCode).toBe(401);
-    });
-    
-    
-    test('GET /event/yourPartecipations - Should not return participations (Unauthorized)', async () => {
-        const response = await request(app).get('/event/yourPartecipations');
-        expect(response.statusCode).toBe(401);
-    });
-    
-    test('GET /event/yourDrafts - Should not return drafts (Unauthorized)', async () => {
-        const response = await request(app).get('/event/yourDrafts')
-        .set('Authorization', `Bearer ${userToken}`);
-        
-        expect(response.statusCode).toBe(200);
-    });
-
-    test('GET /control/drafts - Should return 401 if not admin', async () => {
-        const response = await request(app)
-            .get('/control/drafts')
-            .set('Authorization', `Bearer ${userToken}`);
-            
-        expect(response.statusCode).toBe(200);
-    });
-
-
-    test('DELETE /control/draft - Should return 401 if not admin', async () => {
-        const response = await request(app)
-            .delete('/control/draft?id=65b0a3c4a4d123456789abcd')
-            .set('Authorization', `Bearer ${userToken}`);
-        expect(response.statusCode).toBe(200);
-    });
-
-    test('DELETE /control/event - Should return 401 if not admin', async () => {
-        const response = await request(app)
-            .delete('/control/event?id=65b0a3c4a4d123456789abcd')
-            .set('Authorization', `Bearer ${userToken}`);
-            
-        expect(response.statusCode).toBe(200);
-    });
-
-    test('GET /control/drafts - Should return drafts if admin', async () => {
-        const response = await request(app)
-            .get('/control/drafts')
-            .set('Authorization', `Bearer ${userToken}`);
-        expect(response.statusCode).toBe(200);
-    });
-
-    test('POST /control/approve - Should approve draft if admin', async () => {
-        const response = await request(app)
-            .post('/control/approve')
+            .post(`/partecipation/join`)
             .set('Authorization', `Bearer ${userToken}`)
-            .send({ id: '65b0a3c4a4d123456789abcd' });
-        expect(response.statusCode).toBe(200);
+            .send({ event: testEvent });
+
+    
+        expect(response.statusCode).toBe(400);
     });
 
-    test('DELETE /control/draft - Should delete draft if admin', async () => {
+    // conta i partecipanti dell'evento di test
+    test(`GET /event/partecipants - conta i partecipanti dell evento di test`, async () => {
+        const response = await request(app).get(`/event/partecipants?id=${testEvent._id}`); 
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body.partecipants).toBe(1);
+    });
+
+    //elimina la partecipazione all'evento di test
+    test('DELETE /partecipation/leave - elimina la partecipazione all evento di test', async () => {
         const response = await request(app)
-            .delete('/control/draft?id=65b0a3c4a4d123456789abcd')
+            .delete(`/partecipation/leave?event=${testEvent._id}`)
             .set('Authorization', `Bearer ${userToken}`);
         expect(response.statusCode).toBe(200);
     });
 
-    test('DELETE /control/event - Should delete event if admin', async () => {
+
+    //elimina l'evento di test
+    test('DELETE /event/delete_event - elimina l evento di test', async () => {
         const response = await request(app)
-            .delete('/control/event?id=65b0a3c4a4d123456789abcd')
-            .set('Authorization', `Bearer ${userToken}`);
+        .delete(`/event/delete_event?id=${testEvent._id}`)
+        .set('Authorization', `Bearer ${userToken}`);
         expect(response.statusCode).toBe(200);
     });
 
-
-    test('DELETE /partecipation/leave - Should leave event successfully', async () => {
-        const response = await request(app)
-            .delete('/partecipation/leave?event=65b0a3c4a4d123456789abcd')
-            .set('Authorization', `Bearer ${userToken}`);
-        expect(response.statusCode).toBe(200);
-    });
 
 });

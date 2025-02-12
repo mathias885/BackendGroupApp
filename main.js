@@ -34,21 +34,6 @@ mongoose.connect(uri)
 
 app.use(cors());
 
-//TEMPORANEO SOLO PER TESTING
-
-// Endpoint per eliminare eventi vecchi manualmente
-app.delete('/delete-old-events', async (req, res) => {
-    try {
-        await deleteOldEvents();
-        res.send("Eventi vecchi eliminati con successo");
-    } catch (error) {
-        console.error("Errore durante l'eliminazione degli eventi:", error.message);
-        res.status(500).send("Errore durante l'eliminazione degli eventi");
-    }
-});
-
-
-
 
 // Importa le route
 const registrationRoute = require('./routes/registration.route');
@@ -191,9 +176,17 @@ app.post('/registration', async (req, res) => {
 });
 
 
-// Avvio del server
-app.listen(3000, () => {
-    console.log("Server avviato su porta 3000");
-});
+// per deploy
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+  
+
+// Avvio del server in locale
+//app.listen(3000, () => {
+ //   console.log("Server avviato su porta 3000");
+//});
  
 module.exports = app; // Esporta `app` per i test
