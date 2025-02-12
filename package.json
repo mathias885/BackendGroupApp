@@ -1,11 +1,5 @@
 {
 
-  "scripts": {
-
-    "start": "nodemon test.js"
-
-  },
-
   "dependencies": {
 
     "bcrypt": "^5.1.1",
