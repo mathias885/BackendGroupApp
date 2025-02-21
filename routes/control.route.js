@@ -3,6 +3,7 @@ const router = express.Router();
 const Draft = require('../modules/event_draft.module');
 const Event = require('../modules/event.module');
 const User = require('../modules/user.module');
+const Message = require('../modules/message.module');
 const Organization = require('../modules/organizations.module');
 const Partecipation = require('../modules/partecipation.module');
 const mongoose = require('mongoose');
@@ -85,6 +86,18 @@ router.post('/approve',authenticateJWT,async (req, res) => {
         // Salva l'evento nel database
         eventInstance.save();
         organizationInstance.save();
+
+                // Create a message indicating the event has been approved
+                const message = new Message({
+                    text: 'Il tuo evento è stato approvato.',
+                    date: new Date(), // Current date
+                    type: 'Approved_event',
+                    to: draft.organizer
+                });
+        
+                // Save the message to the database
+                await message.save();
+        
         
 
         await Draft.findByIdAndDelete(id);
@@ -111,7 +124,18 @@ router.delete('/draft',authenticateJWT,async (req, res) => {
         if (!deletedEvent) {
             return res.status(404).json({ message: 'Draft non trovata' });
         }
-        
+        else{
+            // Create a message addressed to the creator of the draft
+            const message = new Message({
+                text: 'La tua draft è stata eliminata.',
+                date: new Date(),
+                type: 'Deleted_draft',
+                to: deletedEvent.organizer
+            });
+
+            // Save the message to the database
+            await message.save();
+        }
         res.json({ message: 'Draft eliminata con successo', deletedEvent });
     } catch (err) {
         res.status(500).json({ message: 'Errore del server', error: err.message });
@@ -119,22 +143,40 @@ router.delete('/draft',authenticateJWT,async (req, res) => {
 });
 
 //elimina un evento con id
-router.delete('/event',authenticateJWT,async (req, res) => {
+router.delete('/event', authenticateJWT, async (req, res) => {
     try {
-
         //controlla che l'user id appartenga ad un admin
         const u = await User.findById(req.user.userId);
-        if(!u.isAdmin){return res.status(401).json({ message: 'non sei un admin' });}
+        if (!u.isAdmin) {
+            return res.status(401).json({ message: 'non sei un admin' });
+        }
 
-        const id=new ObjectId(req.query.id);
+        const id = new ObjectId(req.query.id);
         const deletedEvent = await Event.findByIdAndDelete(id);
 
         if (!deletedEvent) {
             return res.status(404).json({ message: 'Evento non trovato' });
+        } else {
+
+            // Find the organizer's ID in the Organization table
+            const organization = await Organization.findOne({ eventID: id });
+            if (!organization) {
+                return res.status(404).json({ message: 'Organizzatore non trovato' });
+            }
+
+            // Create a message addressed to the organizer of the event
+            const message = new Message({
+                text: 'Il tuo evento è stato eliminato.',
+                date: new Date(), // Current date
+                type: 'Deleted_event',
+                to: organization.userID
+            });
+
+            // Save the message to the database
+            await message.save();
         }
-        
-        await Partecipation.deleteMany({ eventID:id });
-        await Organization.deleteMany({eventID: id });
+        await Partecipation.deleteMany({ eventID: id });
+        await Organization.deleteMany({ eventID: id });
 
         res.json({ message: 'Evento eliminato con successo', deletedEvent });
     } catch (err) {
