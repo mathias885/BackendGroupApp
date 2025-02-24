@@ -18,7 +18,9 @@ app.use(express.json());
 
 // Connessione al database MongoDB
 const password=process.env.PASSWORD;
-const user=process.env.USER;
+const user=process.env.USERNAME;
+
+console.log(user,password);
 
 const uri = `mongodb+srv://${user}:${password}@groupappdb.61rl9.mongodb.net/?tls=true&authSource=admin`;
 
@@ -105,7 +107,8 @@ async function deleteOldEvents() {
                         description: event.description,
                         max_subs: event.max_subs,
                         subs: await partecipants(event._id), // Assicurati che questa funzione ritorni i dati correttamente
-                        orgnizer: await organizer(event._id)  // Assicurati che questa funzione ritorni i dati correttamente
+                        orgnizer: await organizer(event._id),  // Assicurati che questa funzione ritorni i dati correttamente
+                        image: event.image // Carry over the B2 URL
                     });
 
                     record.save(); // Aggiungi il record all'array

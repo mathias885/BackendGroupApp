@@ -74,7 +74,8 @@ router.post('/approve',authenticateJWT,async (req, res) => {
             target: draft.target,
             category: draft.category,
             description: draft.description,
-            max_subs: draft.max_subs
+            max_subs: draft.max_subs,
+            image: draft.image // Carry over the B2 URL
         });
     
         //crea "chi lo organizza"

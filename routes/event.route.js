@@ -1,12 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const Event = require('../modules/event.module');
-const authenticateJWT = require('../middlewares/authenticateJWT');
 const Draft = require('../modules/event_draft.module');
 const Partecipation = require('../modules/partecipation.module');
 const Organization = require('../modules/organizations.module');
+const authenticateJWT = require('../middlewares/authenticateJWT');
 const mongoose = require('mongoose');
+const multer = require('multer');
+const { uploadImage } = require('../modules/blackblaze');
 var ObjectId = require('mongodb').ObjectId;
+
+// Multer setup for memory storage (no disk writes)
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Ottieni eventi filtrati
 router.get('/filtered', async (req, res) => {
@@ -43,31 +48,36 @@ router.get('/filtered', async (req, res) => {
 
 
 // Crea un nuovo evento
-router.post('/create',authenticateJWT, (req, res) => {
+router.post('/create', authenticateJWT, upload.single('image'), async (req, res) => {
+    const organizer = req.user.userId;
 
-    const organizer = req.user.userId; 
+    try {
+        let imageUrl = null;
+        if (req.file) {
+            imageUrl = await uploadImage(req.file); // Upload to B2
+        }
 
-    // Istanzia un nuovo evento con i dati ricevuti
-    const eventInstance = new Draft({
-        title: req.body.title,
-        date: req.body.date,
-        location: req.body.location,
-        price: req.body.price,
-        target: req.body.target,
-        category: req.body.category,
-        description: req.body.description,
-        max_subs: req.body.max_subs,
-        organizer:organizer,
-    });
-
-    // Salva l'evento nel database
-    eventInstance.save()
-        .then(result => {
-            res.send("Evento creato con successo");
-        }).catch(err => {
-            res.status(500).send("Errore durante il salvataggio dell'evento");
+        const eventInstance = new Draft({
+            title: req.body.title,
+            date: req.body.date,
+            location: req.body.location,
+            price: req.body.price,
+            target: req.body.target,
+            category: req.body.category,
+            description: req.body.description,
+            max_subs: req.body.max_subs,
+            organizer: organizer,
+            image: imageUrl // Save B2 URL
         });
+
+        await eventInstance.save();
+        res.send("Evento creato con successo");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Errore durante il salvataggio dell'evento");
+    }
 });
+
 
 //restituisce il numero di partecipanti ad un dato evento
 router.get('/partecipants', async (req, res) => {

@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('./main');
 const mongoose = require('mongoose');
+const path = require('path'); // Added for file paths
 
 var userToken;
 var testDraft;
@@ -34,18 +35,18 @@ describe('Event API Tests', () => {
     //crea una draft di test
     test('POST /event/create - crea una draft di test', async () => {
         const response = await request(app)
-            .post('/event/create')
-            .set('Authorization', `Bearer ${userToken}`)
-            .send({
-                title: "EventoDiTest",
-                date: "2025-01-01T10:00:00.000Z",
-                location: "Test City",
-                price: 10,
-                target: "tutti",
-                category: "musica",
-                description: "Descrizione dell'evento di test",
-                max_subs: 100
-            });
+        .post('/event/create')
+        .set('Authorization', `Bearer ${userToken}`)
+        .field('title', 'EventoDiTest') // Changed to .field for form-data
+        .field('date', '2025-01-01T10:00:00.000Z')
+        .field('location', 'Test City')
+        .field('price', '10')
+        .field('target', 'tutti')
+        .field('category', 'musica')
+        .field('description', "Descrizione dell'evento di test")
+        .field('max_subs', '100')
+        .attach('image', path.join(__dirname, 'test-image.jpg')); // Added image upload
+        
         expect(response.statusCode).toBe(200);
     });
 

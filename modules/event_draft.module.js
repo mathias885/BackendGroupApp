@@ -37,6 +37,10 @@ const draftSchema = new Schema({
     organizer:{
         type: Schema.Types.ObjectId, 
         required: true
+    },
+    image: { // store image as b2 url
+        type: String,
+        required: false
     }
 });
 
